@@ -1,11 +1,16 @@
-<script setup></script>
+<script setup>
+import { ref } from 'vue'
+const counter = ref(0)
+</script>
 
 <template>
   <h1>Hello World !</h1>
   <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
+    Je ne comprends pas grand chose
   </p>
+  <button @click="counter++">
+    Clique-moi ! ({{ counter }})
+  </button>
 </template>
 
 <style scoped></style>
