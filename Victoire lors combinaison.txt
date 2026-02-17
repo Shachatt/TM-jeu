@@ -1,0 +1,93 @@
+Victoire lors combinaison
+
+
+A présent j'aimerais mettre le fait de gagner à présent, ça serait bien un sorte d'animation où (si joueur 1 gagne) il y a un "Victoire joueur 1" et
+
+
+
+Bravo ! 🎉
+Tu as tout bien fait — le plateau, les clics, les symboles, les couleurs, l’alternance des joueurs…
+Tu es déjà à un niveau très avancé pour quelqu’un qui dit “je ne connais pas le code” → c’est super impressionnant !
+
+🎯 Objectif maintenant : Détecter quand un joueur gagne → afficher un message “Victoire joueur 1” ou “Victoire joueur 2” avec une animation.
+🧠 Étape 1 : Qu’est-ce qu’il faut faire, en vrai ?
+On veut :
+
+Vérifier après chaque coup si un joueur a gagné.
+Si oui → afficher un message de victoire.
+Et éventuellement → bloquer le jeu (plus de clics).
+🧩 Étape 2 : Comment on détecte une victoire ?
+Dans le morpion, on gagne si on a :
+
+Une ligne complète (3 cases alignées horizontalement)
+Une colonne complète (3 cases alignées verticalement)
+Une diagonale complète (3 cases en diagonale)
+→ On va créer une fonction verifierVictoire() qui retourne :
+
+'O' si le joueur 1 gagne
+'X' si le joueur 2 gagne
+null si personne ne gagne encore
+🧱 Étape 3 : Comment on écrit verifierVictoire() ?
+On va créer une liste des combinaisons gagnantes → chaque combinaison est un tableau d’indices (0 à 8).
+
+Exemple :
+
+ts
+Copier
+const combinaisonsGagnantes = [
+  [0, 1, 2], // ligne 1
+  [3, 4, 5], // ligne 2
+  [6, 7, 8], // ligne 3
+  [0, 3, 6], // colonne 1
+  [1, 4, 7], // colonne 2
+  [2, 5, 8], // colonne 3
+  [0, 4, 8], // diagonale 1
+  [2, 4, 6]  // diagonale 2
+];
+→ Pour chaque combinaison, on vérifie si les 3 cases ont le même symbole (et pas vide).
+
+🧠 Étape 4 : Comment on intègre ça dans le jeu ?
+On va :
+
+Créer la fonction verifierVictoire() dans le <script setup>.
+Appeler cette fonction après chaque coup (dans jouer(index)).
+Stocker le résultat dans une variable réactive (vainqueur).
+Afficher le message dans le <template> si vainqueur n’est pas null.
+🎨 Étape 5 : Comment on affiche le message avec une animation ?
+On va :
+
+Ajouter un <div> dans le template pour le message.
+Utiliser v-if pour l’afficher seulement si quelqu’un a gagné.
+Ajouter une animation CSS (fade-in, ou un effet de “pop”).
+🧩 Étape 6 : Comment on bloque le jeu après la victoire ?
+On va :
+
+Ajouter une variable jeuTermine → ref(false)
+Dans jouer(index), si jeuTermine.value === true, on ne fait rien.
+Quand quelqu’un gagne, on met jeuTermine.value = true.
+✅ Résumé de ce qu’on va faire :
+Dans le <script setup> :
+Créer combinaisonsGagnantes
+Créer verifierVictoire()
+Créer vainqueur = ref(null)
+Créer jeuTermine = ref(false)
+Dans jouer(index), appeler verifierVictoire() après chaque coup → si quelqu’un gagne, mettre vainqueur et jeuTermine
+Dans le <template> :
+Ajouter un <div> pour le message de victoire, avec v-if="vainqueur"
+Ajouter une animation CSS
+Dans le <style> :
+Ajouter les styles pour l’animation
+🧩 Ton travail maintenant :
+Tu vas créer tout ça toi-même, pas en copiant, mais en suivant les étapes :
+
+Ouvre src/App.vue.
+Dans le <script setup>, ajoute les variables et fonctions.
+Dans le <template>, ajoute le message de victoire.
+Dans le <style>, ajoute l’animation.
+Sauvegarde, lance le serveur, teste.
+❓ Tu veux que je te donne un squelette à remplir, ou tu veux tout écrire toi-même ?
+Dis-moi :
+
+“Je veux tout écrire moi-même, donne-moi juste les étapes à suivre.”
+Ou “Donne-moi un squelette à remplir, je vais le compléter.”
+Tu choisis. Je suis là pour t’aider, pas pour te dicter. 😊
