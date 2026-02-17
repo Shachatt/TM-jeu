@@ -10,12 +10,40 @@
     if (plateau.value[index] === '') {
       plateau.value[index] = joueuractuel.value;
       joueuractuel.value = joueuractuel.value === 'O' ? 'X' : 'O';
+      verifiervictoire()
     }
   }
 
 const ligne1 = computed(() => plateau.value.slice(0, 3));
 const ligne2 = computed(() => plateau.value.slice(3, 6));
 const ligne3 = computed(() => plateau.value.slice(6, 9));
+
+const combinaisonsGagnantes = [
+  [0, 1, 2], // ligne 1
+  [3, 4, 5], // ligne 2
+  [6, 7, 8], // ligne 3
+  [0, 3, 6], // colonne 1
+  [1, 4, 7], // colonne 2
+  [2, 5, 8], // colonne 3
+  [0, 4, 8], // diagonale 1
+  [2, 4, 6]  // diagonale 2
+];
+const vainqueur = ref('');
+const verifiervictoire = () => {
+  combinaisonsGagnantes.forEach(element => {
+    const element1 = element[0]!;
+    const element2 = element[1]!;
+    const element3 = element[2]!;
+    if (plateau.value[element1] !== ''
+    && plateau.value[element2] !== ''
+    && plateau.value[element3] !== ''
+    && plateau.value[element1] === plateau.value[element2] 
+    && plateau.value[element1] === plateau.value[element3] 
+    && plateau.value[element2] === plateau.value[element3]) {
+      vainqueur.value = plateau.value[element1] === 'O' ? 'joueur1' : 'joueur2'
+    }
+  });
+}
 
 </script>
 
@@ -58,6 +86,11 @@ const ligne3 = computed(() => plateau.value.slice(6, 9));
       </div>
     </div>
   </div>
+
+  <div
+  v-if="vainqueur !== ''">
+      <p>VICTOIRE {{ vainqueur }}</p>
+  </div>
 </template>
 
 <style scoped>
@@ -95,4 +128,6 @@ const ligne3 = computed(() => plateau.value.slice(6, 9));
 .joueur2 {
   color: rgb(214, 49, 165);
 }
+
+
 </style>
