@@ -7,10 +7,13 @@
     '', '', ''
   ]);
   const jouer = (index: number) => {
-    if (plateau.value[index] === '') {
+    if (plateau.value[index] === ''
+      && jeutermine.value !== true
+    ) {
       plateau.value[index] = joueuractuel.value;
       joueuractuel.value = joueuractuel.value === 'O' ? 'X' : 'O';
       verifiervictoire()
+      
     }
   }
 
@@ -41,8 +44,14 @@ const verifiervictoire = () => {
     && plateau.value[element1] === plateau.value[element3] 
     && plateau.value[element2] === plateau.value[element3]) {
       vainqueur.value = plateau.value[element1] === 'O' ? 'joueur1' : 'joueur2'
+      jeutermine.value = true
     }
   });
+}
+
+const jeutermine = ref(false)
+const reinitialiser = () => {
+  location.reload();
 }
 
 </script>
@@ -90,7 +99,10 @@ const verifiervictoire = () => {
   <div
   v-if="vainqueur !== ''">
       <p>VICTOIRE {{ vainqueur }}</p>
+      <button @click="reinitialiser"> Réinitialiser
+      </button>
   </div>
+
 </template>
 
 <style scoped>
@@ -129,5 +141,8 @@ const verifiervictoire = () => {
   color: rgb(214, 49, 165);
 }
 
-
+p {
+  color: #e6bfd1;
+  font-style: normal;
+}
 </style>
