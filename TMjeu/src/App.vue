@@ -1,30 +1,52 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="plateau">
+    <div class="ligne">
+      <div class="case">?</div>
+      <div class="case">?</div>
+      <div class="case">?</div>
+    </div>
+    <div class="ligne">
+      <div class="case">?</div>
+      <div class="case">?</div>
+      <div class="case">?</div>
+    </div>
+    <div class="ligne">
+      <div class="case">?</div>
+      <div class="case">?</div>
+      <div class="case">?</div>
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.plateau {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: #e0f7fa;
+  padding: 20px;
+  border-radius: 10px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.ligne {
+  display: flex;
+  gap: 5px;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.case {
+  width: 100px;
+  height: 100px;
+  background-color: white;
+  border: 2px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
 }
 </style>
