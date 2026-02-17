@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { ref, computed } from 'vue';
   const joueuractuel = ref('O');
   const plateau = ref([
     '', '', '',
@@ -12,29 +12,50 @@
       joueuractuel.value = joueuractuel.value === 'O' ? 'X' : 'O';
     }
   }
-import { computed } from 'vue';
+
 const ligne1 = computed(() => plateau.value.slice(0, 3));
-const ligne2 = computed(() => plateau.value.slice(0, 3));
+const ligne2 = computed(() => plateau.value.slice(3, 6));
 const ligne3 = computed(() => plateau.value.slice(6, 9));
 
 </script>
 
 <template>
   <div class="plateau">
+    <!-- Ligne 1 -->
     <div class="ligne">
-      <div class="case">?</div>
-      <div class="case">?</div>
-      <div class="case">?</div>
+      <div
+        v-for="(cell, index) in ligne1"
+        :key="index"
+        class="case"
+        :class="{ 'joueur1': cell === 'O', 'joueur2': cell === 'X'}"
+        @click="jouer(index)"
+      >
+        {{ cell }}
+      </div>
     </div>
+    <!-- Ligne 2 -->
     <div class="ligne">
-      <div class="case">?</div>
-      <div class="case">?</div>
-      <div class="case">?</div>
+      <div
+        v-for="(cell, index) in ligne2"
+        :key="index"
+        class="case"
+        :class="{ 'joueur1': cell === 'O', 'joueur2': cell === 'X'}"
+        @click="jouer(index + 3)"
+      >
+        {{ cell }}
+      </div>
     </div>
+    <!-- Ligne 3 -->
     <div class="ligne">
-      <div class="case">?</div>
-      <div class="case">?</div>
-      <div class="case">?</div>
+      <div
+        v-for="(cell, index) in ligne3"
+        :key="index"
+        class="case"
+        :class="{ 'joueur1': cell === 'O', 'joueur2': cell === 'X'}"
+        @click="jouer(index + 6)"
+      >
+        {{ cell }}
+      </div>
     </div>
   </div>
 </template>
@@ -65,5 +86,13 @@ const ligne3 = computed(() => plateau.value.slice(6, 9));
   font-size: 40px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.joueur1 {
+  color: rgb(69, 55, 189);
+}
+
+.joueur2 {
+  color: rgb(214, 49, 165);
 }
 </style>
