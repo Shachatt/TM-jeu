@@ -1,4 +1,21 @@
 <script setup lang="ts">
+  import { ref } from 'vue';
+  const joueuractuel = ref('O');
+  const plateau = ref([
+    '', '', '',
+    '', '', '',
+    '', '', ''
+  ]);
+  const jouer = (index: number) => {
+    if (plateau.value[index] === '') {
+      plateau.value[index] = joueuractuel.value;
+      joueuractuel.value = joueuractuel.value === 'O' ? 'X' : 'O';
+    }
+  }
+import { computed } from 'vue';
+const ligne1 = computed(() => plateau.value.slice(0, 3));
+const ligne2 = computed(() => plateau.value.slice(0, 3));
+const ligne3 = computed(() => plateau.value.slice(6, 9));
 
 </script>
 
@@ -27,8 +44,8 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  background-color: #e0f7fa;
-  padding: 20px;
+  background-color: #f7b4d3;
+  padding: 15px;
   border-radius: 10px;
 }
 
