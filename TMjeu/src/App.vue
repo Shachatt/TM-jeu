@@ -51,7 +51,14 @@ const verifiervictoire = () => {
 
 const jeutermine = ref(false)
 const reinitialiser = () => {
-  location.reload();
+  plateau.value = [
+    '', '', '',
+    '', '', '',
+    '', '', ''
+  ];
+  joueuractuel.value = 'O';
+  vainqueur.value = '';
+  jeutermine.value = false;
 }
 
 </script>
@@ -99,8 +106,7 @@ const reinitialiser = () => {
   <div
   v-if="vainqueur !== ''">
       <p>VICTOIRE {{ vainqueur }}</p>
-      <button @click="reinitialiser"> Réinitialiser
-      </button>
+      <button @click="reinitialiser" class="bouton-reini"> Réinitialiser </button>
   </div>
 
 </template>
@@ -144,5 +150,19 @@ const reinitialiser = () => {
 p {
   color: #e6bfd1;
   font-style: normal;
+}
+
+.bouton-reini {
+  background-color: #f7b4d3;
+  color: #333;
+  width: 50%;
+  height: 8vh;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.bouton-reini:hover {
+  background-color: #f87fb8;
 }
 </style>
