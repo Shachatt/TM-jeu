@@ -9,11 +9,12 @@
   const jouer = (index: number) => {
     if (plateau.value[index] === ''
       && jeutermine.value !== true
+      && matchnul.value !== true
     ) {
       plateau.value[index] = joueuractuel.value;
       joueuractuel.value = joueuractuel.value === 'O' ? 'X' : 'O';
       verifiervictoire()
-      
+      egalite()
     }
   }
 
@@ -45,8 +46,10 @@ const verifiervictoire = () => {
     && plateau.value[element2] === plateau.value[element3]) {
       vainqueur.value = plateau.value[element1] === 'O' ? 'joueur1' : 'joueur2'
       jeutermine.value = true
-    }
+    };
+    
   });
+
 }
 
 const jeutermine = ref(false)
@@ -59,6 +62,17 @@ const reinitialiser = () => {
   joueuractuel.value = 'O';
   vainqueur.value = '';
   jeutermine.value = false;
+  matchnul.value = false;
+}
+
+const estplein = computed(() => plateau.value.every(cell => cell !== ''));
+const matchnul = ref(false);
+const egalite = () => {
+  if (estplein.value === true
+    && vainqueur.value === ''
+  ) {
+    matchnul.value = true;
+  };
 }
 
 </script>
@@ -108,7 +122,11 @@ const reinitialiser = () => {
       <p>VICTOIRE {{ vainqueur }}</p>
       <button @click="reinitialiser" class="bouton-reini"> Réinitialiser </button>
   </div>
-
+  <div
+  v-if="matchnul !== false">
+      <p>MATCH NUL</p>
+      <button @click="reinitialiser" class="bouton-reini"> Réinitialiser </button>
+  </div>
 </template>
 
 <style scoped>
