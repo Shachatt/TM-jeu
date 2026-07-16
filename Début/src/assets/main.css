@@ -35,12 +35,12 @@ a,
 }
 
 body { 
-  background-color: #D12149;
+  background-color: #640e22;
   font-family:Georgia, 'Times New Roman', Times, serif;
   padding: 20px;
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-heignt: 100vh;
+  min-height: 100vh;
 }

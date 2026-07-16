@@ -78,13 +78,13 @@ const egalite = () => {
 </script>
 
 <template>
-  <div class="plateau">
+  <div class="flex flex-col gap-5 bg-[#f7b4d3] p-15 rounded-10">
     <!-- Ligne 1 -->
-    <div class="ligne">
+    <div class="flex gap-5">
       <div
         v-for="(cell, index) in ligne1"
         :key="index"
-        class="case"
+        class="w-[100px] h-[100px bg-[white] border-2 border-gray-900 flex place-items-center justify-items-center text-40px font-bold cursor-pointer]"
         :class="{ 'joueur1': cell === 'O', 'joueur2': cell === 'X'}"
         @click="jouer(index)"
       >
@@ -92,11 +92,11 @@ const egalite = () => {
       </div>
     </div>
     <!-- Ligne 2 -->
-    <div class="ligne">
+    <div class="flex gap-5">
       <div
         v-for="(cell, index) in ligne2"
         :key="index"
-        class="case"
+        class="w-[100px] h-[100px bg-[white] border-2 border-gray-900 flex place-items-center justify-items-center text-40px font-bold cursor-pointer]"
         :class="{ 'joueur1': cell === 'O', 'joueur2': cell === 'X'}"
         @click="jouer(index + 3)"
       >
@@ -104,11 +104,11 @@ const egalite = () => {
       </div>
     </div>
     <!-- Ligne 3 -->
-    <div class="ligne">
+    <div class="flex gap-5">
       <div
         v-for="(cell, index) in ligne3"
         :key="index"
-        class="case"
+        class="w-[100px] h-[100px bg-[white] border-2 border-gray-900 flex place-items-center justify-items-center text-40px font-bold cursor-pointer]"
         :class="{ 'joueur1': cell === 'O', 'joueur2': cell === 'X'}"
         @click="jouer(index + 6)"
       >
@@ -120,42 +120,18 @@ const egalite = () => {
   <div
   v-if="vainqueur !== ''">
       <p>VICTOIRE {{ vainqueur }}</p>
-      <button @click="reinitialiser" class="bouton-reini"> Réinitialiser </button>
+      <button @click="reinitialiser" class="bg-rose-300 text-black w-1/2 h-8 justify-center-safe items-center-safe gap-10"> Réinitialiser </button>
   </div>
   <div
   v-if="matchnul !== false">
       <p>MATCH NUL</p>
-      <button @click="reinitialiser" class="bouton-reini"> Réinitialiser </button>
+      <button @click="reinitialiser" class="bg-rose-300 text-black w-1/2 h-8 justify-center-safe items-center-safe gap-10"> Réinitialiser </button>
   </div>
 </template>
 
 <style scoped>
-.plateau {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  background-color: #f7b4d3;
-  padding: 15px;
-  border-radius: 10px;
-}
 
-.ligne {
-  display: flex;
-  gap: 5px;
-}
 
-.case {
-  width: 100px;
-  height: 100px;
-  background-color: white;
-  border: 2px solid #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  font-weight: bold;
-  cursor: pointer;
-}
 
 .joueur1 {
   color: rgb(69, 55, 189);
@@ -170,15 +146,7 @@ p {
   font-style: normal;
 }
 
-.bouton-reini {
-  background-color: #f7b4d3;
-  color: #333;
-  width: 50%;
-  height: 8vh;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
+
 
 .bouton-reini:hover {
   background-color: #f87fb8;
