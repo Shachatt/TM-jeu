@@ -1,11 +1,26 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-const grille = ref([
-    { valeur: [], verrouille: false }, { valeur: [], verrouille: false }, { valeur: [], verrouille: false }, { valeur: [], verrouille: false },
-    { valeur: [], verrouille: false }, { valeur: [], verrouille: false }, { valeur: [], verrouille: false }, { valeur: [], verrouille: false },
-    { valeur: [], verrouille: false }, { valeur: [], verrouille: false }, { valeur: [], verrouille: false }, { valeur: [], verrouille: false },
-    { valeur: [], verrouille: false }, { valeur: [], verrouille: false }, { valeur: [], verrouille: false }, { valeur: [], verrouille: false }
-]);
+function GrilleVide() {
+    return [ 
+        { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
+        { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
+        { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
+        { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}
+    ]
+    }
+function Inequations() {
+    const ValeurA = ref({ligne: 0, colonne: 0});
+    const ValeurB = ref({ligne: 0, colonne: 1});
+    const inequ = ref({de: ValeurA, vers: ValeurB, signe: ''>''});
+    
+    if ValeurA >= ValeurB {
+        return {correct: true}
+    }
+    else if ValeurA <= ValeurB {
+        return {correct: false}
+    }
+    }
+
 </script>
 
 <template>
