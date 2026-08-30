@@ -1,6 +1,6 @@
-<script setup lang="ts">
 import { ref } from 'vue';
-function GrilleVide() {
+// grile vide mais l'index est comme un trait
+function GrilleVide() { 
     return [ 
         { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
         { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
@@ -8,19 +8,15 @@ function GrilleVide() {
         { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}
     ]
     }
-function Inequations() {
-    const ValeurA = ref({ligne: 0, colonne: 0});
-    const ValeurB = ref({ligne: 0, colonne: 1});
-    const inequ = ref({de: ValeurA, vers: ValeurB, signe: ''>''});
-    
-    if ((ValeurA.value) >= (ValeurB.value)) {
-        return {correct: true}
-    }
-    else if ((ValeurA.value) <= (ValeurB.value)) {
-        return {correct: false}
-    }
-    }
+//fonction pour se repérer dans la grille
+function colonne(i:number) {
+    return i % 4
+}
 
+function ligne(i:number) { 
+    Math.floor(i/4)
+    return
+}
 </script>
 
 <template>
