@@ -13,10 +13,10 @@ function Inequations() {
     const ValeurB = ref({ligne: 0, colonne: 1});
     const inequ = ref({de: ValeurA, vers: ValeurB, signe: ''>''});
     
-    if ValeurA >= ValeurB {
+    if ((ValeurA.value) >= (ValeurB.value)) {
         return {correct: true}
     }
-    else if ValeurA <= ValeurB {
+    else if ((ValeurA.value) <= (ValeurB.value)) {
         return {correct: false}
     }
     }
