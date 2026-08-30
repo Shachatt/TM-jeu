@@ -1,3 +1,4 @@
+<script setup lang="ts">
 import { ref } from 'vue';
 // grile vide mais l'index est comme un trait
 function GrilleVide() { 
@@ -9,13 +10,11 @@ function GrilleVide() {
     ]
     }
 //fonction pour se repérer dans la grille
+function ligne(i:number) { 
+    return Math.floor(i/4)
+}
 function colonne(i:number) {
     return i % 4
-}
-
-function ligne(i:number) { 
-    Math.floor(i/4)
-    return
 }
 </script>
 
