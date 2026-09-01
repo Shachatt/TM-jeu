@@ -19,21 +19,24 @@ function colonne(i:number) {
 }
 //fonction pour contrôler s'il y même valeur sur la colonne / ligne
 
-function memeColonne(grille, index, let valeur:number){
-    for (let i=0 ; i < 16 ; i += 4) { // comment faire pour dire que i c'est l'élé qu'on a choisi ?
-        if ( valeur === grille[i.valeur]) {
+function pasmemeColonne(grille:{valeur:number|null;verrouille:boolean}[],index:number, valeur:number){
+    for (let i=colonne(index) ; i < 16 ; i += 4) { // comment faire pour dire que i c'est l'élé qu'on a choisi ?
+        if ( valeur === grille[i].valeur) {
             return false
         }
     }
     return true
 }
-function memeLigne(grille, index, let valeur:number){
-    for (let  i = 0; i < 16 ; i++) {
-        if ( valeur === grille[i.valeur]){
+function pasmemeLigne(grille:{valeur:number|null;verrouille:boolean}[],index:number, valeur:number){
+    for (let  i = ligne(index)*4 ; i < ligne(index)*4+4 ; i++) {
+        if ( valeur === grille[i].valeur){
             return false
         }
     }
     return true
+}
+function peutPlacer(grille:{valeur:number;verrouille:boolean}[],index:number, valeur:number){
+    return pasmemeColonne(grille,index,valeur) && pasmemeLigne(grille,index,valeur) 
 }
 
 </script>
