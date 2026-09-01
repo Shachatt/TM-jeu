@@ -1,0 +1,268 @@
+interface chgmt
+
+Après avoir fait tout cela, j'aimerais apprendre à changer l'apparence pour que cela soit plus joli, tout en m'expliquant les fonctionnalités de tout ce que tu vas me dire. Pour te donner une idée j'aimerais changer la couleur du fond, rendre les deux boutons plus jolies et leurs donner un espace entre eux, et finalement changer la couleur du texte
+
+
+
+Super, Shaïna ! 🎉
+Tu veux rendre ton site plus joli : changer la couleur du fond, styliser les boutons, ajouter de l’espace entre eux, et changer la couleur du texte — on va le faire pas à pas, en t’expliquant ce que fait chaque chose comme si tu avais 5 ans. 😊
+
+🎨 Imagine que tu veux décorer ta maison Lego
+Tu as déjà :
+
+Un titre “Hello World !”
+Un paragraphe “je ne comprends pas grand chose”
+Deux boutons : “Clique-moi !” et “Réinitialiser”
+Maintenant, tu veux les décorer → on va utiliser CSS (c’est comme la peinture et les stickers pour ton site).
+
+🛠️ Étape 1 : Ajoute du style dans App.vue
+Dans ton fichier App.vue, tu as déjà :
+
+vue
+Copier
+<template> ... </template>
+<script setup> ... </script>
+→ En dessous, ajoute cette partie :
+
+vue
+Copier
+<style scoped>
+/* Ici, on va écrire les styles */
+</style>
+✅ scoped = les styles s’appliquent seulement à ce fichier (pas à tout le site).
+✅ style = c’est comme un cahier de peinture pour ton composant.
+
+🖍️ Étape 2 : Change la couleur du fond
+Dans <style scoped>, ajoute :
+
+css
+Copier
+body {
+  background-color: #f0f8ff;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+✅ background-color: #f0f8ff = fond bleu clair (comme le ciel).
+✅ font-family: Arial, sans-serif = police plus jolie.
+✅ padding: 20px = espace autour du contenu (pour ne pas coller aux bords).
+
+🖍️ Étape 3 : Stylise les boutons
+Ajoute ce code dans <style scoped> :
+
+css
+Copier
+button {
+  background-color: #4CAF50; /* vert */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #45a049; /* vert plus foncé quand on passe la souris */
+}
+✅ background-color: #4CAF50 = couleur verte des boutons.
+✅ color: white = texte blanc.
+✅ padding: 10px 20px = espace à l’intérieur du bouton.
+✅ margin: 5px = espace autour du bouton → ça les sépare !
+✅ border-radius: 8px = coins arrondis.
+✅ cursor: pointer = la souris devient une main quand tu passes dessus.
+✅ transition: background-color 0.3s = effet lisse quand la couleur change.
+✅ :hover = ce qui se passe quand tu passes la souris dessus.
+
+🖍️ Étape 4 : Change la couleur du titre et du paragraphe
+Ajoute ce code dans <style scoped> :
+
+css
+Copier
+h1 {
+  color: #333;
+  text-align: center;
+}
+
+p {
+  color: #666;
+  text-align: center;
+  font-style: italic;
+}
+✅ color: #333 = gris foncé pour le titre.
+✅ text-align: center = centré.
+✅ color: #666 = gris clair pour le paragraphe.
+✅ font-style: italic = italique.
+
+🎉 Étape 5 : Sauvegarde et regarde ton site
+→ Appuie sur Ctrl + S (ou Cmd + S).
+→ Ton site se rafraîchit tout seul !
+→ Tu vois :
+
+Un fond bleu clair.
+Un titre centré en gris foncé.
+Un paragraphe en italique.
+Deux boutons verts avec des coins arrondis, espacés, et qui changent de couleur quand tu passes la souris dessus. 🎉
+📦 Étape 6 : Envoie sur GitHub
+→ Va dans Source Control → ajoute les fichiers modifiés → écris un message comme :
+Ajout de styles : fond, boutons jolis, espaces, couleurs
+→ Clique sur la coche → “Push”.
+
+🧠 Résumé pour les 5 ans :
+✅ Tu as ajouté un cahier de peinture (<style scoped>).
+✅ Tu as peint le fond en bleu clair.
+✅ Tu as décoré les boutons en vert avec des coins arrondis.
+✅ Tu as mis de l’espace entre les boutons.
+✅ Tu as changé la couleur du titre et du paragraphe.
+✅ Tu as envoyé tout ça sur GitHub.
+
+❓ Tu veux que je t’explique :
+Comment changer la couleur des boutons quand on clique dessus ?
+Comment ajouter une ombre aux boutons ?
+Comment mettre un fond d’image ?
+Dis-moi juste :
+👉 “Je veux que les boutons changent de couleur quand on clique”
+👉 Ou : “Je veux ajouter une ombre aux boutons”
+
+Je suis là pour t’aider, pas pour te stresser ! 😊
+
+
+
+
+Alors j'ai fait ce que tu m'as dit, mais le la couleur du fond n'a pas changé, les textes et les boutons ont changé. j'aimerais aussi savoir comment je fais pour mettre les boutons au centre de ma page comme pour les textes
+
+
+
+Merci pour ton retour, Shaïna ! 😊
+C’est super que les boutons et les textes soient stylisés — et tu as raison : le fond n’a pas changé, et tu veux centrer les boutons comme les textes.
+On va corriger ça pas à pas, en t’expliquant pourquoi ça ne marche pas, et comment le faire bien.
+
+❌ Problème 1 : La couleur du fond ne change pas
+🧠 Pourquoi ?
+Parce que tu as écrit :
+
+css
+Copier
+body {
+  background-color: #f0f8ff;
+}
+→ Mais dans Vue 3, le body n’est pas toujours contrôlé par ton composant — surtout si tu utilises Vite (le kit que tu as installé).
+→ Le fond est souvent géré par un fichier global, pas par App.vue.
+
+✅ Solution : On va changer le fond dans un fichier global
+1. Crée un fichier src/assets/main.css
+→ Dans VS Code, va dans src/ → clique droit → New File → nomme-le :
+assets/main.css
+
+✅ C’est un fichier de style global — il s’appliquera à tout le site.
+
+2. Colle ce code dans main.css :
+css
+Copier
+body {
+  background-color: #f0f8ff;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+✅ background-color: #f0f8ff = fond bleu clair.
+✅ display: flex; justify-content: center; align-items: center; = centre tout le contenu horizontalement et verticalement.
+✅ min-height: 100vh = la page fait au moins la hauteur de l’écran.
+
+3. Importe ce fichier dans main.js
+→ Va dans src/main.js (ou src/main.ts si tu as ça).
+
+Tu vois peut-être :
+
+js
+Copier
+import { createApp } from 'vue'
+import App from './App.vue'
+
+createApp(App).mount('#app')
+→ Ajoute cette ligne en haut :
+
+js
+Copier
+import './assets/main.css'
+→ Ton fichier devient :
+
+js
+Copier
+import './assets/main.css'
+import { createApp } from 'vue'
+import App from './App.vue'
+
+createApp(App).mount('#app')
+✅ Tu dis à Vue : “Utilise ce fichier CSS pour tout le site.”
+
+4. Sauvegarde et regarde ton site
+→ Appuie sur Ctrl + S → ton site se rafraîchit.
+→ Le fond est maintenant bleu clair, et tout le contenu est centré ! 🎉
+
+❌ Problème 2 : Les boutons ne sont pas centrés
+🧠 Pourquoi ?
+Parce que tu as centré le titre et le paragraphe avec text-align: center, mais les boutons sont des éléments block — ils prennent toute la largeur, et text-align ne les centre pas.
+
+✅ Solution : On va les centrer avec display: flex
+1. Dans App.vue, va dans <template>
+Tu as :
+
+vue
+Copier
+<h1>Hello World !</h1>
+<p>je ne comprends pas grand chose</p>
+<button @click="counter++">Clique-moi ! ({{ counter }})</button>
+<button @click="counter = 0">Réinitialiser</button>
+→ Enveloppe les boutons dans un conteneur :
+
+vue
+Copier
+<div class="buttons">
+  <button @click="counter++">Clique-moi ! ({{ counter }})</button>
+  <button @click="counter = 0">Réinitialiser</button>
+</div>
+✅ div class="buttons" = un conteneur pour les boutons.
+
+2. Dans <style scoped>, ajoute ce code :
+css
+Copier
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+✅ display: flex = les boutons sont placés côte à côte.
+✅ justify-content: center = centrés horizontalement.
+✅ gap: 10px = espace entre les boutons.
+✅ margin-top: 20px = espace au-dessus des boutons.
+
+3. Sauvegarde et regarde ton site
+→ Les boutons sont maintenant centrés, avec un espace entre eux. 🎉
+
+📦 Étape finale : Envoie sur GitHub
+→ Va dans Source Control → ajoute les fichiers modifiés (main.css, main.js, App.vue) → écris un message comme :
+Correction : fond bleu clair + boutons centrés avec flex
+→ Clique sur la coche → “Push”.
+
+🧠 Résumé pour les 5 ans :
+✅ Tu as créé un fichier de style global (main.css) pour le fond.
+✅ Tu as centré tout le contenu avec flex.
+✅ Tu as centré les boutons avec un conteneur div et flex.
+✅ Tu as envoyé tout ça sur GitHub.
+
+❓ Tu veux que je t’explique :
+Comment changer la couleur des boutons quand on clique dessus ?
+Comment ajouter une ombre aux boutons ?
+Comment mettre un fond d’image ?
+Dis-moi juste :
+👉 “Je veux que les boutons changent de couleur quand on clique”
+👉 Ou : “Je veux ajouter une ombre aux boutons”
+
+Je suis là pour t’aider, pas pour te stresser ! 😊
