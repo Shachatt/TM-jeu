@@ -45,6 +45,8 @@ const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille:
     ]
 
 console.log(peutPlacer(testgrille, 9, 4))
+console.log(peutPlacer(testgrille, 9, 3))
+console.log(peutPlacer(testgrille, 9, 1))
 </script>
 <template>
 </template>
