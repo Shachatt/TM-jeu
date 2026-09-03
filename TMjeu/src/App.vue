@@ -38,6 +38,15 @@ function pasmemeLigne(grille:Casevide[],index:number, valeur:number){
 function peutPlacer(grille:Casevide[],index:number, valeur:number){
     return pasmemeColonne(grille,index,valeur) && pasmemeLigne(grille,index,valeur) 
 }
+function placerChiffre(){
+    for (let i=0 ; i < 16 ; i++){
+        while (peutPlacer(grille,i,null) !== true) {
+            let j = Math.floor(Math.random()*4)+1 //j valeur vouloir mettre dans i
+        }
+        let j = grille[i]?.valeur
+    }
+}
+
 const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
         { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
         { valeur: 3, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: 2, verrouille: true},
@@ -47,6 +56,8 @@ const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille:
 console.log(peutPlacer(testgrille, 9, 4))
 console.log(peutPlacer(testgrille, 9, 3))
 console.log(peutPlacer(testgrille, 9, 1))
+console.log(placerChiffre())
+
 </script>
 <template>
 </template>
