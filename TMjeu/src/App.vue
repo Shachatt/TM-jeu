@@ -68,7 +68,31 @@ function placerChiffre(index: number): boolean { // on rentre un chiffre et la f
 
     return false //si les quatres on échoué valeur on échoué on retourne false après avoir effacé la valeur de la case
 }
-   
+
+type Inequation = {case1:number, case2:number,signe:">"|"<"}
+function grilleInequation(grille:Casevide[]){
+    const signes: Inequation[]
+    const caseCourante = grille[i] //c'est las case actuelle avec l'index dune case de notre grille
+    if (!caseCourante) {return false}
+    for (let i=0;i<16;i++){
+        if (3 !== colonne(i)) {//côté de droite
+            if (grille[i])?.valeur <= grille[i+1]?.valeur){
+                signes.push("<")
+            } else {
+                signes.push(">")
+            }
+        }
+        if (3!== ligne(i)) {
+            if (grille[i]?.valeur <= grille[i+4]?.valeur){
+                signes.push("<")
+            } else {
+                signes.push(">")
+            }
+        }
+    } 
+    return signes[]
+}
+
 const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
         { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
         { valeur: 3, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: 2, verrouille: true},
