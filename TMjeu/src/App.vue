@@ -71,26 +71,30 @@ function placerChiffre(index: number): boolean { // on rentre un chiffre et la f
 
 type Inequation = {case1:number, case2:number,signe:">"|"<"}
 function grilleInequation(grille:Casevide[]){
-    const signes: Inequation[]
-    const caseCourante = grille[i] //c'est las case actuelle avec l'index dune case de notre grille
-    if (!caseCourante) {return false}
+    const InequationComplete: Inequation[] = []//tableau vide
     for (let i=0;i<16;i++){
+        const valgrille = grille[i]?.valeur
+        if (!valgrille){return false}
         if (3 !== colonne(i)) {//côté de droite
-            if (grille[i])?.valeur <= grille[i+1]?.valeur){
-                signes.push("<")
+            const valAcomparerCote = grille[i+1]?.valeur
+               if (!valAcomparerCote){return false}
+            if (valgrille < valAcomparerCote){ 
+                InequationComplete.push({case1:i, case2:i+1,signe:"<"}) 
             } else {
-                signes.push(">")
+                InequationComplete.push({case1:i, case2:i+1,signe:">"})
             }
         }
         if (3!== ligne(i)) {
-            if (grille[i]?.valeur <= grille[i+4]?.valeur){
-                signes.push("<")
+            const valAcomparerDessous = grille[i+4]?.valeur
+            if (!valAcomparerDessous){return false}
+            if (valgrille < valAcomparerDessous){
+                InequationComplete.push({case1:i, case2:i+4,signe:"<"})
             } else {
-                signes.push(">")
+                InequationComplete.push({case1:i, case2:i+4,signe:">"})
             }
         }
     } 
-    return signes[]
+    return InequationComplete
 }
 
 const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
@@ -102,8 +106,8 @@ const reussi = placerChiffre(0)
 console.log(peutPlacer(testgrille, 9, 4))
 console.log(peutPlacer(testgrille, 9, 3))
 console.log(peutPlacer(testgrille, 9, 1))
-console.log(reussi, grille)
-console.log(melanger([1,2,3,4]))
+console.log(reussi, grille)//la grille avec toute les valeurs placés
+console.log(grilleInequation(grille))
 
 </script>
 <template>
