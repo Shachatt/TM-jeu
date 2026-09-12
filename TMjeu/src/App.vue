@@ -74,10 +74,10 @@ function grilleInequation(grille:Casevide[]){
     const InequationComplete: Inequation[] = []//tableau vide
     for (let i=0;i<16;i++){
         const valgrille = grille[i]?.valeur
-        if (!valgrille){return false}
+        if (valgrille==null){throw new Error("case vide")}
         if (3 !== colonne(i)) {//côté de droite
             const valAcomparerCote = grille[i+1]?.valeur
-               if (!valAcomparerCote){return false}
+               if (valAcomparerCote==null){throw new Error("case vide")}
             if (valgrille < valAcomparerCote){ 
                 InequationComplete.push({case1:i, case2:i+1,signe:"<"}) 
             } else {
@@ -86,7 +86,7 @@ function grilleInequation(grille:Casevide[]){
         }
         if (3!== ligne(i)) {
             const valAcomparerDessous = grille[i+4]?.valeur
-            if (!valAcomparerDessous){return false}
+                if (valAcomparerDessous==null){throw new Error("case vide")}
             if (valgrille < valAcomparerDessous){
                 InequationComplete.push({case1:i, case2:i+4,signe:"<"})
             } else {
