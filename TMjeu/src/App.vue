@@ -54,7 +54,7 @@ function placerChiffre(index: number): boolean { // on rentre un chiffre et la f
         return true
     }
     const caseCourante = grille[index] //c'est las case actuelle avec l'index dune case de notre grille
-    if (!caseCourante) return false //vérifie si case existe, !qlch = si qlch est faux on return false, donc si ça existe pas, donc ça vérifie pour la suite
+    if (!caseCourante) {return false} //vérifie si case existe, !qlch = si qlch est faux on return false, donc si ça existe pas, donc ça vérifie pour la suite
     const candidats = melanger([1, 2, 3, 4])//ici va utiliser la fonction pour recréer un tableau avec 1 2 3 et 4 mélangé. ça sort un tableau
     for (const candidat of candidats) { //for of est une bucle qui parcourt les valeurs du tableau, sans passer par index : "pour chacun des chiffres de la liste"
         if (peutPlacer(grille, index, candidat)) {
@@ -104,24 +104,53 @@ function testerInequation(grille:Casevide[], liste:Inequation[],index:number): b
         const val2 = grille[InequationComplete.case2]?.valeur
         if (val1 == null || val2 == null){
             continue
-        } // je ne comprend plus ce qu'il faut mettre ensuite
-        if (InequationComplete.signe === "<"){} //je en sais pas dans quel ordre faire ? par quel moyen vérifie-t-on si ça ne respecte pas la règle ?
-        if (InequationComplete.signe === ">"){} //mais en tout cas en français je dirais : si les deux signes ne correspondent pas alors on return false
+        } 
+        if (">" === InequationComplete.signe && val1 < val2){
+            return false
+        }
+        if ("<" === InequationComplete.signe && val1 > val2){
+            return false
+        }
     }
     return true
+}
+function unicité(grille:Casevide[],liste:Inequation[],index:number){
+    let solution = 0
+    if (index >= 16){
+        return 1
+    }
+    const caseCourante = grille[index]
+    if (!caseCourante) {return 0}
+    if (caseCourante.verrouille){return unicité(grille,liste,index+1)}
+    const candidats = melanger([1,2,3,4])
+    for (const candidat of candidats){
+        if (peutPlacer(grille,index,candidat)){ 
+            caseCourante.valeur = candidat //écrire la valeur dedans
+            if (testerInequation(grille,liste,index)){
+                solution += unicité(grille, liste, index + 1) 
+            }
+        }
+        caseCourante.valeur = null
+        if (solution >= 2){
+            break
+        }
+    }
+    return solution
 }
 
 const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
         { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
         { valeur: 3, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: 2, verrouille: true},
-        { valeur: null, verrouille: false}, { valeur: 1, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}
-    ]
+        { valeur: null, verrouille: false}, { valeur: 1, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}]
 const reussi = placerChiffre(0)
+const Listeineq = grilleInequation(grille)
 console.log(peutPlacer(testgrille, 9, 4))
 console.log(peutPlacer(testgrille, 9, 3))
 console.log(peutPlacer(testgrille, 9, 1))
 console.log(reussi, grille)//la grille avec toute les valeurs placés
 console.log(grilleInequation(grille))
+console.log(testerInequation(grille, Listeineq,0))
+console.log(unicité(grille,Listeineq,0))
 
 </script>
 <template>
