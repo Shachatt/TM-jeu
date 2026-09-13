@@ -96,6 +96,20 @@ function grilleInequation(grille:Casevide[]){
     } 
     return InequationComplete
 }
+function testerInequation(grille:Casevide[], liste:Inequation[],index:number): boolean{
+    for (const InequationComplete of liste){
+        if (InequationComplete.case1 !== index && InequationComplete.case2 !== index){
+            continue}
+        const val1 = grille[InequationComplete.case1]?.valeur
+        const val2 = grille[InequationComplete.case2]?.valeur
+        if (val1 == null || val2 == null){
+            continue
+        } // je ne comprend plus ce qu'il faut mettre ensuite
+        if (InequationComplete.signe === "<"){} //je en sais pas dans quel ordre faire ? par quel moyen vérifie-t-on si ça ne respecte pas la règle ?
+        if (InequationComplete.signe === ">"){} //mais en tout cas en français je dirais : si les deux signes ne correspondent pas alors on return false
+    }
+    return true
+}
 
 const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
         { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
