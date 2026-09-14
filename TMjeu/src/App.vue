@@ -137,10 +137,35 @@ function unicité(grille:Casevide[],liste:Inequation[],index:number){
     }
     return solution
 }
-function enleverEle(grille:Casevide[], liste:Inequation[]){
-    const EtatDepartgrille = melanger([grille.length-1]) //longueur de 16, donc index = length - 1
-    const EtatDepartliste = melanger(InequationComplete)
-    return
+function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signifie que la fonction renvoie rien, va juste modifié la grille et tableau
+    for (const CaseMtn of grille ){ //On verrouille toutes les cases de la grille comme ça pas de changement dans notre grille initial
+        CaseMtn.verrouille = true 
+    }
+    const indices:number[] = [] //on va construire une grille de 0 à 15 et ensuite la mélanger pour les index
+    for (let i = 0; i < grille.length ; i++){//ça revient à ma question d'avant.
+        indices.push(i) //utiliser push pour ajouter un élé au tableau vide
+    }
+    const indicesMelanges = melanger(indices)
+    // ensuite on va retirer les chiffres et faire attention si problème d'unicité
+    for (const index of indicesMelanges){ 
+        const caseCourante = grille[index] //on parle de la case à cet index (donc valeur et verrouille)
+        if (!caseCourante) continue
+        const ancienneValeur = caseCourante.valeur //l'ancienne valeur est celle qu'on va essayer d'enlever car si unicité ne va pas on peut la remettre
+        caseCourante.valeur = null
+        caseCourante.verrouille = false
+        if (unicité(grille,liste,0) !== 1){  //s'il n'existe pas qu'une solution alors il faut pas retirer la valeur
+            caseCourante.valeur = ancienneValeur
+            caseCourante.verrouille = true //ça nous permet de retirer l'enlevement du chiffre
+        }
+    }
+    //ici on retire inéquation
+    for (let k = liste.length - 1; k >= 0; k--){
+        const retiree = liste.splice(k, 1)[0]  //donc rend un tableau et [0] est le premier élé
+        if (!retiree) continue
+        if (unicité(grille,liste,0) !== 1){
+            liste.splice(k, 0, retiree) //k va supprimer 0 élé à la position k et insère le retiree (donc on remet l'inéquation)
+        }
+    }
 }
 
 const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
@@ -153,6 +178,7 @@ console.log(reussi, grille)//la grille avec toute les valeurs placés
 console.log(grilleInequation(grille))
 console.log(testerInequation(grille, Listeineq,0))
 console.log(unicité(GrilleVide(),Listeineq,0))
+console.log(enleverEle(grille, Listeineq))
 </script>
 
 <template>
