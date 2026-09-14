@@ -137,6 +137,11 @@ function unicité(grille:Casevide[],liste:Inequation[],index:number){
     }
     return solution
 }
+function enleverEle(grille:Casevide[], liste:Inequation[]){
+    const EtatDepartgrille = melanger([grille.length-1]) //longueur de 16, donc index = length - 1
+    const EtatDepartliste = melanger(InequationComplete)
+    return
+}
 
 const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
         { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
@@ -144,15 +149,12 @@ const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille:
         { valeur: null, verrouille: false}, { valeur: 1, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}]
 const reussi = placerChiffre(0)
 const Listeineq = grilleInequation(grille)
-console.log(peutPlacer(testgrille, 9, 4))
-console.log(peutPlacer(testgrille, 9, 3))
-console.log(peutPlacer(testgrille, 9, 1))
 console.log(reussi, grille)//la grille avec toute les valeurs placés
 console.log(grilleInequation(grille))
 console.log(testerInequation(grille, Listeineq,0))
-console.log(unicité(grille,Listeineq,0))
-
+console.log(unicité(GrilleVide(),Listeineq,0))
 </script>
+
 <template>
 </template>
 
