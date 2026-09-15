@@ -1,16 +1,23 @@
 <script setup lang="ts">
-import { ref, } from 'vue';
+import { ref, computed, reactive } from 'vue';
 // grile vide mais l'index est comme un trait
 type Casevide = {valeur:number|null, verrouille:boolean} //comprend que valeur peut etre null ou9 un nombre
-function GrilleVide(): Casevide[] { //comprendre que les cases acceptent valeur accepte null et nmber
-    return [ 
-        { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
-        { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
-        { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
-        { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}
-    ]
+function GrilleVide(n:number): Casevide[] { //comprendre que les cases acceptent valeur accepte null et nmber
+    const arr : Casevide[]=[]
+    for (let i=0;i<n*n;i++){
+        arr.push({ valeur: null, verrouille: false})
     }
-const grille = GrilleVide() //on a notre grille mtn
+    
+    return arr
+   // [ 
+    //    { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
+      //  { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
+        // { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
+        // { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}
+    // ]
+    }
+    // !!!!! modifier pour tout, ne plus se concentrer sur 4
+const grille = GrilleVide(4) //on a notre grille qui à un côté variable 
 //fonction pour se repérer dans la grille
 function ligne(i:number) { 
     return Math.floor(i/4)
@@ -167,7 +174,6 @@ function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signi
         }
     }
 }
-
 const reussi = placerChiffre(grille,0)
 const Listeineq = grilleInequation(grille)
 console.log(reussi, grille)//la grille avec toute les valeurs placés
@@ -175,8 +181,8 @@ console.log(grille)
 console.log(Listeineq)
 enleverEle(grille,Listeineq)
 console.log(unicite(grille,Listeineq,0))
+console.log(grille)
 console.log(Listeineq)
-
 </script>
 
 <template>
