@@ -49,7 +49,7 @@ function melanger(tableau: number[]): number[] { // number dedans : le type dans
     return resultat //car c'est ce qu'on a besoin
 }
 
-function placerChiffre(index: number): boolean { // on rentre un chiffre et la fonction nous rend un boolean
+function placerChiffre(grille:Casevide[],index: number): boolean { // on rentre un chiffre et la fonction nous rend un boolean
     if (index >= 16) { //vérifie que les 16 (0 à 15) cases sont remplis, si oui on arrête tout
         return true
     }
@@ -59,7 +59,7 @@ function placerChiffre(index: number): boolean { // on rentre un chiffre et la f
     for (const candidat of candidats) { //for of est une bucle qui parcourt les valeurs du tableau, sans passer par index : "pour chacun des chiffres de la liste"
         if (peutPlacer(grille, index, candidat)) {
             caseCourante.valeur = candidat // if true, alors on peut écrire la valeur dans la case
-            if (placerChiffre(index + 1)) { // si la case d'après renvoie aussi true alors c'est nice. RECURSIVITE la fonction se relance pour les case suivantes
+            if (placerChiffre(grille,index + 1)) { // si la case d'après renvoie aussi true alors c'est nice. RECURSIVITE la fonction se relance pour les case suivantes
                 return true
             }
             caseCourante.valeur = null // si la case suivant ne fonctionne pas, on efface le chiffre
@@ -114,20 +114,20 @@ function testerInequation(grille:Casevide[], liste:Inequation[],index:number): b
     }
     return true
 }
-function unicité(grille:Casevide[],liste:Inequation[],index:number){
+function unicite(grille:Casevide[],liste:Inequation[],index:number){
     let solution = 0
     if (index >= 16){
         return 1
     }
     const caseCourante = grille[index]
     if (!caseCourante) {return 0}
-    if (caseCourante.verrouille){return unicité(grille,liste,index+1)}
+    if (caseCourante.verrouille){return unicite(grille,liste,index+1)}
     const candidats = melanger([1,2,3,4])
     for (const candidat of candidats){
         if (peutPlacer(grille,index,candidat)){ 
             caseCourante.valeur = candidat //écrire la valeur dedans
             if (testerInequation(grille,liste,index)){
-                solution += unicité(grille, liste, index + 1) 
+                solution += unicite(grille, liste, index + 1) 
             }
         }
         caseCourante.valeur = null
@@ -153,7 +153,7 @@ function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signi
         const ancienneValeur = caseCourante.valeur //l'ancienne valeur est celle qu'on va essayer d'enlever car si unicité ne va pas on peut la remettre
         caseCourante.valeur = null
         caseCourante.verrouille = false
-        if (unicité(grille,liste,0) !== 1){  //s'il n'existe pas qu'une solution alors il faut pas retirer la valeur
+        if (unicite(grille,liste,0) !== 1){  //s'il n'existe pas qu'une solution alors il faut pas retirer la valeur
             caseCourante.valeur = ancienneValeur
             caseCourante.verrouille = true //ça nous permet de retirer l'enlevement du chiffre
         }
@@ -162,22 +162,21 @@ function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signi
     for (let k = liste.length - 1; k >= 0; k--){
         const retiree = liste.splice(k, 1)[0]  //donc rend un tableau et [0] est le premier élé
         if (!retiree) continue
-        if (unicité(grille,liste,0) !== 1){
+        if (unicite(grille,liste,0) !== 1){
             liste.splice(k, 0, retiree) //k va supprimer 0 élé à la position k et insère le retiree (donc on remet l'inéquation)
         }
     }
 }
 
-const reussi = placerChiffre(0)
+const reussi = placerChiffre(grille,0)
 const Listeineq = grilleInequation(grille)
 console.log(reussi, grille)//la grille avec toute les valeurs placés
-console.log(testerInequation(grille, Listeineq,0))
 console.log(grille)
 console.log(Listeineq)
-enleverEle(grille, Listeineq)
-console.log(grille)
+enleverEle(grille,Listeineq)
+console.log(unicite(grille,Listeineq,0))
 console.log(Listeineq)
-console.log(unicité(grille,Listeineq,0))
+
 </script>
 
 <template>
