@@ -168,17 +168,16 @@ function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signi
     }
 }
 
-const testgrille = [{ valeur: null, verrouille: false}, { valeur: 2, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
-        { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
-        { valeur: 3, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: 2, verrouille: true},
-        { valeur: null, verrouille: false}, { valeur: 1, verrouille: true}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}]
 const reussi = placerChiffre(0)
 const Listeineq = grilleInequation(grille)
 console.log(reussi, grille)//la grille avec toute les valeurs placés
-console.log(grilleInequation(grille))
 console.log(testerInequation(grille, Listeineq,0))
-console.log(unicité(GrilleVide(),Listeineq,0))
-console.log(enleverEle(grille, Listeineq))
+console.log(grille)
+console.log(Listeineq)
+enleverEle(grille, Listeineq)
+console.log(grille)
+console.log(Listeineq)
+console.log(unicité(grille,Listeineq,0))
 </script>
 
 <template>
