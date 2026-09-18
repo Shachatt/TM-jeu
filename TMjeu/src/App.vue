@@ -7,27 +7,21 @@ function GrilleVide(n:number): Casevide[] { //comprendre que les cases acceptent
     for (let i=0;i<n*n;i++){
         arr.push({ valeur: null, verrouille: false})
     }
-    
     return arr
-   // [ 
-    //    { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
-      //  { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
-        // { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false},
-        // { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}, { valeur: null, verrouille: false}
-    // ]
     }
     // !!!!! modifier pour tout, ne plus se concentrer sur 4
-const grille = GrilleVide(4) //on a notre grille qui à un côté variable 
+const tailleGrille:number = 4
+const grille = GrilleVide(tailleGrille) //on a notre grille qui à un côté variable 
 //fonction pour se repérer dans la grille
 function ligne(i:number) { 
-    return Math.floor(i/4)
+    return Math.floor(i/tailleGrille)
 }
 function colonne(i:number) {
-    return i % 4
+    return i % tailleGrille
 }
 //fonction pour contrôler s'il y même valeur sur la colonne / ligne
 function pasmemeColonne(grille:Casevide[],index:number, valeur:number){
-    for (let i=colonne(index) ; i < 16 ; i += 4) { 
+    for (let i=colonne(index) ; i < tailleGrille*tailleGrille ; i += tailleGrille) { 
         if ( valeur === grille[i]?.valeur) { //grille[i].valeur : prend la valeur de ce qu'il y a à cet index : ?. permet d'éviter l'undefind
             return false
         }
@@ -35,7 +29,7 @@ function pasmemeColonne(grille:Casevide[],index:number, valeur:number){
     return true
 }
 function pasmemeLigne(grille:Casevide[],index:number, valeur:number){
-    for (let  i = ligne(index)*4 ; i < ligne(index)*4+4 ; i++) {
+    for (let  i = ligne(index)*tailleGrille ; i < ligne(index)*tailleGrille+tailleGrille ; i++) {
         if ( valeur === grille[i]?.valeur){
             return false
         }
@@ -57,7 +51,7 @@ function melanger(tableau: number[]): number[] { // number dedans : le type dans
 }
 
 function placerChiffre(grille:Casevide[],index: number): boolean { // on rentre un chiffre et la fonction nous rend un boolean
-    if (index >= 16) { //vérifie que les 16 (0 à 15) cases sont remplis, si oui on arrête tout
+    if (index >= tailleGrille*tailleGrille) { //vérifie que les 16 (0 à 15) cases sont remplis, si oui on arrête tout
         return true
     }
     const caseCourante = grille[index] //c'est las case actuelle avec l'index dune case de notre grille
@@ -79,7 +73,7 @@ function placerChiffre(grille:Casevide[],index: number): boolean { // on rentre 
 type Inequation = {case1:number, case2:number,signe:">"|"<"}
 function grilleInequation(grille:Casevide[]){
     const InequationComplete: Inequation[] = []//tableau vide
-    for (let i=0;i<16;i++){
+    for (let i=0;i<tailleGrille*tailleGrille;i++){
         const valgrille = grille[i]?.valeur
         if (valgrille==null){throw new Error("case vide")}
         if (3 !== colonne(i)) {//côté de droite
@@ -91,7 +85,7 @@ function grilleInequation(grille:Casevide[]){
                 InequationComplete.push({case1:i, case2:i+1,signe:">"})
             }
         }
-        if (3!== ligne(i)) {
+        if (3!== ligne(i)) { //case en dessous
             const valAcomparerDessous = grille[i+4]?.valeur
                 if (valAcomparerDessous==null){throw new Error("case vide")}
             if (valgrille < valAcomparerDessous){
@@ -109,7 +103,7 @@ function testerInequation(grille:Casevide[], liste:Inequation[],index:number): b
             continue}
         const val1 = grille[InequationComplete.case1]?.valeur
         const val2 = grille[InequationComplete.case2]?.valeur
-        if (val1 == null || val2 == null){
+        if (val1 == null || val2 == null){ //si on compare une case avec une pleine ça rendra faux
             continue
         } 
         if (">" === InequationComplete.signe && val1 < val2){
@@ -123,13 +117,13 @@ function testerInequation(grille:Casevide[], liste:Inequation[],index:number): b
 }
 function unicite(grille:Casevide[],liste:Inequation[],index:number){
     let solution = 0
-    if (index >= 16){
+    if (index >= tailleGrille*tailleGrille){
         return 1
     }
     const caseCourante = grille[index]
     if (!caseCourante) {return 0}
     if (caseCourante.verrouille){return unicite(grille,liste,index+1)}
-    const candidats = melanger([1,2,3,4])
+    const candidats = melanger([1,2,3,4]) //regarder comment faire pour avoir liste de nombre de la taille d'un coté de grille
     for (const candidat of candidats){
         if (peutPlacer(grille,index,candidat)){ 
             caseCourante.valeur = candidat //écrire la valeur dedans
