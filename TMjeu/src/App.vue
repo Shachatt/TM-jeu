@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue';
+import { ref } from 'vue';
 // grile vide mais l'index est comme un trait
 type Casevide = {valeur:number|null, verrouille:boolean} //comprend que valeur peut etre null ou9 un nombre
 function GrilleVide(n:number): Casevide[] { //comprendre que les cases acceptent valeur accepte null et nmber
@@ -56,7 +56,7 @@ function placerChiffre(grille:Casevide[],index: number): boolean { // on rentre 
     }
     const caseCourante = grille[index] //c'est las case actuelle avec l'index dune case de notre grille
     if (!caseCourante) {return false} //vérifie si case existe, !qlch = si qlch est faux on return false, donc si ça existe pas, donc ça vérifie pour la suite
-    const candidats = melanger([1, 2, 3, 4])//ici va utiliser la fonction pour recréer un tableau avec 1 2 3 et 4 mélangé. ça sort un tableau
+    const candidats = melanger([1, 2, 3, 4])//ici va utiliser la fonction pour recréer un tableau avec 1 2 3 et 4 mélangé. ça sort un tableau ATTENTION comment je fais pour le rendre muable au chgmt de taille de grille
     for (const candidat of candidats) { //for of est une bucle qui parcourt les valeurs du tableau, sans passer par index : "pour chacun des chiffres de la liste"
         if (peutPlacer(grille, index, candidat)) {
             caseCourante.valeur = candidat // if true, alors on peut écrire la valeur dans la case
@@ -168,18 +168,43 @@ function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signi
         }
     }
 }
-const reussi = placerChiffre(grille,0)
+// d'abord génération de grille avant de rendre modifiable
+const grilleRemplie = placerChiffre(grille,0)
 const Listeineq = grilleInequation(grille)
-console.log(reussi, grille)//la grille avec toute les valeurs placés
-console.log(grille)
-console.log(Listeineq)
 enleverEle(grille,Listeineq)
-console.log(unicite(grille,Listeineq,0))
-console.log(grille)
-console.log(Listeineq)
+// chgmt pour rendre réactif le script pour template, à la fin pour que cela ne change pas lors du passage de toutes les fonction pour générer une grille jouable
+const grilleDeJeu = ref(grille)
+const ineqDeJeu = ref(Listeineq)
+// ici cela crée la grille pour laffichage en incluant chiffre et ineq, mais toujours de mnière variable
+const tailleAffGrille = 2 * tailleGrille - 1 //d'abord en double et on en soustrait un
+// on crée la liste des emplacement entre case
+type Endroit = {forme: 'carre' | 'espace'}
+const endroits: Endroit[] = []
+for (let lign = 0; lign < tailleAffGrille; lign++){ //enft script setup est déjà le corps d'une fonction donc va exécuter tout de haut en bas
+    for (let colonn = 0; colonn < tailleAffGrille; colonn++){ //1ere for passe dans les lignes et ensuite 2eme colonne des lignes, ne s'enregistre pas 
+        if (lign % 2 === 0 && colonn % 2 === 0){ //la c'est pour que les deux valeurs soient paires c'est les carrés
+            endroits.push({forme:'carre'})
+        } else {
+            endroits.push({forme: 'espace'})
+        }
+    }
+}
+// une piste est un segment compris entre deux lignes ou deux colonnes
+// const pistes = `repeat(${tailleGrille-1}, 3rem 1rem) 3rem` 
+const pistes = `repeat(${tailleGrille - 1}, 3rem 1 rem) 3rem`
+//permet de déclarer la piste il y en a 7, mais je capte pas vraiment comment çA se crée, les rem est une unité relative à la taille de police
+// répète 3 x (3x16px), repete toute la liste donc 3x une liste de 3 et 1 et le dernier c'est trois
+// `` crée une chaine qui passe à la ligne et le résultat fonction ${} est une chiane de caractère et ${} disparait
+
 </script>
 
 <template>
+    <div class="grid" :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que avant c'est un attribut -->
+        <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML mais je comprend pas le problème de priorité qu'il serait possible ?-->
+            <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}"></div> <!--là ici on crée les carrés avec les bords-->
+            <div v-else></div> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux-->
+        </template> <!--si on note template/ c'est une balise qui s'autoferme-->
+    </div>
 </template>
 
 <style scoped>
