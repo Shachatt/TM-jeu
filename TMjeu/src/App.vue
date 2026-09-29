@@ -178,7 +178,7 @@ const ineqDeJeu = ref(Listeineq)
 // ici cela crée la grille pour laffichage en incluant chiffre et ineq, mais toujours de mnière variable
 const tailleAffGrille = 2 * tailleGrille - 1 //d'abord en double et on en soustrait un
 // on crée la liste des emplacement entre case
-type Endroit = {forme: 'carre' | 'espace'}
+type Endroit = | {forme: 'carre' | 'espace'} //les cases ont l'index de 0-15
 const endroits: Endroit[] = []
 for (let lign = 0; lign < tailleAffGrille; lign++){ //enft script setup est déjà le corps d'une fonction donc va exécuter tout de haut en bas
     for (let colonn = 0; colonn < tailleAffGrille; colonn++){ //1ere for passe dans les lignes et ensuite 2eme colonne des lignes, ne s'enregistre pas 
@@ -191,7 +191,7 @@ for (let lign = 0; lign < tailleAffGrille; lign++){ //enft script setup est déj
 }
 // une piste est un segment compris entre deux lignes ou deux colonnes
 // const pistes = `repeat(${tailleGrille-1}, 3rem 1rem) 3rem` 
-const pistes = `repeat(${tailleGrille - 1}, 3rem 1 rem) 3rem`
+const pistes = `repeat(${tailleGrille - 1}, 3rem 2rem) 3rem`
 //permet de déclarer la piste il y en a 7, mais je capte pas vraiment comment çA se crée, les rem est une unité relative à la taille de police
 // répète 3 x (3x16px), repete toute la liste donc 3x une liste de 3 et 1 et le dernier c'est trois
 // `` crée une chaine qui passe à la ligne et le résultat fonction ${} est une chiane de caractère et ${} disparait
@@ -199,10 +199,10 @@ const pistes = `repeat(${tailleGrille - 1}, 3rem 1 rem) 3rem`
 </script>
 
 <template>
-    <div class="grid" :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que avant c'est un attribut -->
+    <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que avant c'est un attribut -->
         <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML mais je comprend pas le problème de priorité qu'il serait possible ?-->
             <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}"></div> <!--là ici on crée les carrés avec les bords-->
-            <div v-else></div> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux-->
+            <div v-else class="min-h-6 min-w-6"></div> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux-->
         </template> <!--si on note template/ c'est une balise qui s'autoferme-->
     </div>
 </template>
