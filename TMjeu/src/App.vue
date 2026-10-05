@@ -195,13 +195,15 @@ const pistes = `repeat(${tailleGrille - 1}, 3rem 2rem) 3rem`
 //permet de déclarer la piste il y en a 7, mais je capte pas vraiment comment çA se crée, les rem est une unité relative à la taille de police
 // répète 3 x (3x16px), repete toute la liste donc 3x une liste de 3 et 1 et le dernier c'est trois
 // `` crée une chaine qui passe à la ligne et le résultat fonction ${} est une chiane de caractère et ${} disparait
+
+
 </script>
 
 <template>
     <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que avant c'est un attribut -->
-        <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML -->
+        <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
             <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}">
-                <div v-if="grille[k]?.verrouille === true">{{ grille[k]?.valeur }}</div>
+                <div v-if="grille[endroit.index]?.verrouille === true">{{ grille[endroit.index]?.valeur }}</div>
                 <div v-else></div>
             </div> <!--là ici on crée les carrés avec les bords-->
             <div v-else class="min-h-6 min-w-6"></div> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux-->
