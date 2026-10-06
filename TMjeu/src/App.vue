@@ -178,16 +178,42 @@ const ineqDeJeu = ref(Listeineq)
 // ici cela crée la grille pour laffichage en incluant chiffre et ineq, mais toujours de mnière variable
 const tailleAffGrille = 2 * tailleGrille - 1 //d'abord en double et on en soustrait un
 // on crée la liste des emplacement entre case
-type Endroit = {forme: 'carre', index:number} | {forme:'espace'} //les cases ont l'index de 0-15
+type Endroit = {forme: 'carre', index:number} | {forme: 'vertical', haut:number, bas:number} | {forme: 'horizontal', gauche:number, droite:number} | {forme:'espace'} //les cases ont l'index de 0-15
 const endroits: Endroit[] = []
 for (let lign = 0; lign < tailleAffGrille; lign++){ //enft script setup est déjà le corps d'une fonction donc va exécuter tout de haut en bas
     for (let colonn = 0; colonn < tailleAffGrille; colonn++){ //1ere for passe dans les lignes et ensuite 2eme colonne des lignes, ne s'enregistre pas 
         if (lign % 2 === 0 && colonn % 2 === 0){ //la c'est pour que les deux valeurs soient paires c'est les carrés
             endroits.push({forme:'carre', index:tailleGrille * (lign/2) + (colonn/2)}) //on y inclus l'index pour la petite grille carré, pas de problème car toujours chiffre pair -> %2
         } else {
-            endroits.push({forme: 'espace'})
+            if (lign%2!==0 && colonn%2===0){
+                const idx1 = tailleGrille * ((lign-1)/2) + (colonn/2)
+                const idx2 = idx1 + tailleGrille
+                endroits.push({forme: 'vertical', haut:idx1, bas:idx2})
+            } else if (lign%2===0 && colonn%2!==0){
+                const idx1 = tailleGrille * (lign/2) + ((colonn - 1)/2) //donc on garde le même style que dans carré, la constante est-elle au bonne endroit ?
+                const idx2 = tailleGrille * (lign/2) + ((colonn + 1)/2) 
+                endroits.push({forme: 'horizontal', gauche:idx1, droite:idx2})
+            } else {
+            endroits.push({forme: 'espace'}) }
         }
     }
+}
+function trouverSigne(endroit: Endroit) {
+    // 1. Vérifier si c'est horizontal
+    if (endroit.forme === 'horizontal') {
+        // 2. Faire la recherche .find() ici avec la condition que vous avez trouvée plus haut
+        ineqDeJeu.value.find(item => )
+        // const resultat = ...
+        
+        // 3. Si resultat existe, retourner resultat.signe, sinon retourner null
+        // if (resultat) return ... else return ...
+    }
+    // 4. Faire la même chose pour vertical (en utilisant endroit.haut et endroit.bas)
+    if (endroit.forme === 'vertical'){
+
+    }
+    
+    // 5. Si ce n'est ni l'un ni l'autre, retourner null
 }
 // une piste est un segment compris entre deux lignes ou deux colonnes
 // const pistes = `repeat(${tailleGrille-1}, 3rem 1rem) 3rem` 
@@ -206,7 +232,7 @@ const pistes = `repeat(${tailleGrille - 1}, 3rem 2rem) 3rem`
                 <div v-if="grille[endroit.index]?.verrouille === true">{{ grille[endroit.index]?.valeur }}</div>
                 <div v-else></div>
             </div> <!--là ici on crée les carrés avec les bords-->
-            <div v-else class="min-h-6 min-w-6"></div> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux-->
+            <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-6 min-w-6"></div> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
         </template> <!--si on note template/ c'est une balise qui s'autoferme-->
     </div>
 </template>
