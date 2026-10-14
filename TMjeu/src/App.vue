@@ -229,7 +229,7 @@ console.log(Listeineq)
     <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que avant c'est un attribut -->
         <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
             <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}">
-                <div v-if="grille[endroit.index]?.verrouille === true">{{ grille[endroit.index]?.valeur }}</div>
+                <div v-if="grilleDeJeu[endroit.index]?.verrouille === true">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
                 <div v-else @click=""></div> <!--Case non-verrouille donc libre pour la remplir-->
             </div> <!--là ici on crée les carrés avec les bords-->
             <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-3 min-w-3"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
