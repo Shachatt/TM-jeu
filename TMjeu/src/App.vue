@@ -14,7 +14,7 @@ const tailleGrille:number = 4
 const grille = GrilleVide(tailleGrille) //on a notre grille qui à un côté variable 
 //fonction pour se repérer dans la grille
 function ligne(i:number) { 
-    return Math.floor(i/tailleGrille)
+    return Math.floor(i/tailleGrille) //math.floor évite les virgules
 }
 function colonne(i:number) {
     return i % tailleGrille
@@ -126,7 +126,7 @@ function unicite(grille:Casevide[],liste:Inequation[],index:number){
     const candidats = melanger([1,2,3,4]) //regarder comment faire pour avoir liste de nombre de la taille d'un coté de grille
     for (const candidat of candidats){
         if (peutPlacer(grille,index,candidat)){ 
-            caseCourante.valeur = candidat //écrire la valeur dedans
+            caseCourante.valeur = candidat //écrire la valeur dedans si seulement ça convient
             if (testerInequation(grille,liste,index)){
                 solution += unicite(grille, liste, index + 1) 
             }
@@ -201,19 +201,18 @@ for (let lign = 0; lign < tailleAffGrille; lign++){ //enft script setup est déj
 function trouverSigne(endroit: Endroit) {
     // 1. Vérifier si c'est horizontal
     if (endroit.forme === 'horizontal') {
-        // 2. Faire la recherche .find() ici avec la condition que vous avez trouvée plus haut
-        ineqDeJeu.value.find(item => )
-        // const resultat = ...
-        
-        // 3. Si resultat existe, retourner resultat.signe, sinon retourner null
-        // if (resultat) return ... else return ...
+        const decouverte = ineqDeJeu.value.find(item => item.case1 === endroit.gauche && item.case2 === endroit.droite)  // find permet de parcourir un tabelau et de s'arreter sur ele qui respecte ()  
+        if (decouverte) {return decouverte.signe}
+        return null
     }
-    // 4. Faire la même chose pour vertical (en utilisant endroit.haut et endroit.bas)
     if (endroit.forme === 'vertical'){
-
+        const decouverte = ineqDeJeu.value.find(item => item.case1 === endroit.haut && item.case2 === endroit.bas)        
+        if (decouverte) {return decouverte.signe}
+        return null
     }
-    
-    // 5. Si ce n'est ni l'un ni l'autre, retourner null
+    else {
+        return null
+    }
 }
 // une piste est un segment compris entre deux lignes ou deux colonnes
 // const pistes = `repeat(${tailleGrille-1}, 3rem 1rem) 3rem` 
@@ -221,7 +220,8 @@ const pistes = `repeat(${tailleGrille - 1}, 3rem 2rem) 3rem`
 //permet de déclarer la piste il y en a 7, mais je capte pas vraiment comment çA se crée, les rem est une unité relative à la taille de police
 // répète 3 x (3x16px), repete toute la liste donc 3x une liste de 3 et 1 et le dernier c'est trois
 // `` crée une chaine qui passe à la ligne et le résultat fonction ${} est une chiane de caractère et ${} disparait
-
+const caseActive = ref<number | null>(null)
+console.log(Listeineq)
 
 </script>
 
@@ -230,9 +230,14 @@ const pistes = `repeat(${tailleGrille - 1}, 3rem 2rem) 3rem`
         <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
             <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}">
                 <div v-if="grille[endroit.index]?.verrouille === true">{{ grille[endroit.index]?.valeur }}</div>
-                <div v-else></div>
+                <div v-else @click=""></div> <!--Case non-verrouille donc libre pour la remplir-->
             </div> <!--là ici on crée les carrés avec les bords-->
-            <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-6 min-w-6"></div> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
+            <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-3 min-w-3"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
+                <div v-if="trouverSigne(endroit)" :style="{ transform: endroit.forme === 'vertical' ? 'rotate(90deg)' : 'rotate(0deg)'}">  {{ trouverSigne(endroit) }}
+                </div>
+            </div> 
+            <div v-else="endroit.forme === 'espace'"
+            ></div>
         </template> <!--si on note template/ c'est une balise qui s'autoferme-->
     </div>
 </template>
