@@ -221,22 +221,29 @@ const pistes = `repeat(${tailleGrille - 1}, 3rem 2rem) 3rem`
 // répète 3 x (3x16px), repete toute la liste donc 3x une liste de 3 et 1 et le dernier c'est trois
 // `` crée une chaine qui passe à la ligne et le résultat fonction ${} est une chiane de caractère et ${} disparait
 const caseActive = ref<number | null>(null)
-console.log(Listeineq)
+function rendreActif (index:number){
+    if ()
+        if (caseActive.value === null){
+            caseActive.value = index
+        } else {
+            caseActive.value = null
+        }
+}
 
 </script>
 
 <template>
     <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que avant c'est un attribut -->
         <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
-            <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}">
+            <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}" @click="rendreActif(endroit.index)">
                 <div v-if="grilleDeJeu[endroit.index]?.verrouille === true">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
-                <div v-else @click=""></div> <!--Case non-verrouille donc libre pour la remplir-->
+                <div v-else ></div> <!--Case non-verrouille donc libre pour la remplir-->
             </div> <!--là ici on crée les carrés avec les bords-->
             <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-3 min-w-3"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
                 <div v-if="trouverSigne(endroit)" :style="{ transform: endroit.forme === 'vertical' ? 'rotate(90deg)' : 'rotate(0deg)'}">  {{ trouverSigne(endroit) }}
                 </div>
             </div> 
-            <div v-else="endroit.forme === 'espace'"
+            <div v-else-if ="endroit.forme === 'espace'"
             ></div>
         </template> <!--si on note template/ c'est une balise qui s'autoferme-->
     </div>
