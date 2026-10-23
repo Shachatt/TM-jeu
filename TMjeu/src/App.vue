@@ -222,21 +222,25 @@ const pistes = `repeat(${tailleGrille - 1}, 3rem 2rem) 3rem`
 // `` crée une chaine qui passe à la ligne et le résultat fonction ${} est une chiane de caractère et ${} disparait
 const caseActive = ref<number | null>(null)
 function rendreActif (index:number){
-    if ()
-        if (caseActive.value === null){
+    const caseActu = grilleDeJeu.value[index]
+    if (!caseActu) return
+    if (caseActu.verrouille === false) {
+        if (caseActive.value !== index){
             caseActive.value = index
         } else {
             caseActive.value = null
         }
+    }
+    console.log(index)
 }
 
 </script>
 
 <template>
-    <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que avant c'est un attribut -->
+    <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
         <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
-            <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}" @click="rendreActif(endroit.index)">
-                <div v-if="grilleDeJeu[endroit.index]?.verrouille === true">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
+            <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}" @click="rendreActif(endroit.index)" :class="{'ring-fuchsia-500 bg-orange-500': endroit.index === caseActive }">
+                <div v-if="grilleDeJeu[endroit.index]?.verrouille === true" >{{ grilleDeJeu[endroit.index]?.valeur }}</div>
                 <div v-else ></div> <!--Case non-verrouille donc libre pour la remplir-->
             </div> <!--là ici on crée les carrés avec les bords-->
             <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-3 min-w-3"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
