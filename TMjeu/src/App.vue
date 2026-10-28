@@ -4,7 +4,7 @@ import { ref } from 'vue';
 type Casevide = {valeur:number|null, verrouille:boolean} //comprend que valeur peut etre null ou9 un nombre
 function GrilleVide(n:number): Casevide[] { //comprendre que les cases acceptent valeur accepte null et nmber
     const arr : Casevide[]=[]
-    for (let i=0;i<n*n;i++){
+    for (let i=0;i<n*n;i++){   //for (d'où on part ; jusqu'où on va ; quel jump on fait)
         arr.push({ valeur: null, verrouille: false})
     }
     return arr
@@ -38,6 +38,14 @@ function pasmemeLigne(grille:Casevide[],index:number, valeur:number){
 }
 function peutPlacer(grille:Casevide[],index:number, valeur:number){
     return pasmemeColonne(grille,index,valeur) && pasmemeLigne(grille,index,valeur) 
+}
+
+function creerListeNb(){
+    const listeTailleGrille: number[] = []
+    for (let i = 1; i < tailleGrille + 1; i++){ //comme ça on pousse tous les chiffres de 1 à la taille qu'on a besoin dans une liste
+        listeTailleGrille.push(i)
+    }
+    return listeTailleGrille
 }
 
 function melanger(tableau: number[]): number[] { // number dedans : le type dans le tableau, ext ce qui va en sortir
@@ -143,7 +151,7 @@ function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signi
         CaseMtn.verrouille = true 
     }
     const indices:number[] = [] //on va construire une grille de 0 à 15 et ensuite la mélanger pour les index
-    for (let i = 0; i < grille.length ; i++){//ça revient à ma question d'avant.
+    for (let i = 0; i < grille.length ; i++){
         indices.push(i) //utiliser push pour ajouter un élé au tableau vide
     }
     const indicesMelanges = melanger(indices)
@@ -234,12 +242,20 @@ function rendreActif (index:number){
     console.log(index)
 }
 
+function ecrireValeur (valeur:number|null){
+    if (!caseActive.value) return
+    const caseAEcrire = grilleDeJeu.value[caseActive.value]
+    if (!caseAEcrire) return
+    caseAEcrire.valeur = valeur
+    caseActive.value = null
+}
+
 </script>
 
 <template>
     <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
         <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
-            <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}" @click="rendreActif(endroit.index)" :class="{'ring-fuchsia-500 bg-orange-500': endroit.index === caseActive }">
+            <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155'}" @click="rendreActif(endroit.index)" :class="{'bg-orange-500': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
                 <div v-if="grilleDeJeu[endroit.index]?.verrouille === true" >{{ grilleDeJeu[endroit.index]?.valeur }}</div>
                 <div v-else ></div> <!--Case non-verrouille donc libre pour la remplir-->
             </div> <!--là ici on crée les carrés avec les bords-->
