@@ -47,6 +47,7 @@ function creerListeNb(){
     }
     return listeTailleGrille
 }
+const ListeTailGril = creerListeNb()
 
 function melanger(tableau: number[]): number[] { // number dedans : le type dans le tableau, ext ce qui va en sortir
     const restants = [...tableau]   //le spread(...) consiste à étaler son contenu, ça crée une copie (car sinon c'est dans même case de stockage)
@@ -64,7 +65,7 @@ function placerChiffre(grille:Casevide[],index: number): boolean { // on rentre 
     }
     const caseCourante = grille[index] //c'est las case actuelle avec l'index dune case de notre grille
     if (!caseCourante) {return false} //vérifie si case existe, !qlch = si qlch est faux on return false, donc si ça existe pas, donc ça vérifie pour la suite
-    const candidats = melanger([1, 2, 3, 4])//ici va utiliser la fonction pour recréer un tableau avec 1 2 3 et 4 mélangé. ça sort un tableau ATTENTION comment je fais pour le rendre muable au chgmt de taille de grille
+    const candidats = melanger(ListeTailGril)//ici va utiliser la fonction pour recréer un tableau avec 1 2 3 et 4 mélangé. ça sort un tableau ATTENTION comment je fais pour le rendre muable au chgmt de taille de grille
     for (const candidat of candidats) { //for of est une bucle qui parcourt les valeurs du tableau, sans passer par index : "pour chacun des chiffres de la liste"
         if (peutPlacer(grille, index, candidat)) {
             caseCourante.valeur = candidat // if true, alors on peut écrire la valeur dans la case
@@ -131,7 +132,7 @@ function unicite(grille:Casevide[],liste:Inequation[],index:number){
     const caseCourante = grille[index]
     if (!caseCourante) {return 0}
     if (caseCourante.verrouille){return unicite(grille,liste,index+1)}
-    const candidats = melanger([1,2,3,4]) //regarder comment faire pour avoir liste de nombre de la taille d'un coté de grille
+    const candidats = melanger(ListeTailGril) //regarder comment faire pour avoir liste de nombre de la taille d'un coté de grille
     for (const candidat of candidats){
         if (peutPlacer(grille,index,candidat)){ 
             caseCourante.valeur = candidat //écrire la valeur dedans si seulement ça convient
@@ -243,11 +244,11 @@ function rendreActif (index:number){
 }
 
 function ecrireValeur (valeur:number|null){
-    if (!caseActive.value) return
+    if (caseActive.value === null) return
     const caseAEcrire = grilleDeJeu.value[caseActive.value]
     if (!caseAEcrire) return
     caseAEcrire.valeur = valeur
-    caseActive.value = null
+    caseActive.value = null //permettra de fermer la bulle
 }
 
 </script>
