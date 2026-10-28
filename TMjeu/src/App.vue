@@ -256,12 +256,12 @@ function ecrireValeur (valeur:number|null){
 <template>
     <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
         <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
-            <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" @click="rendreActif(endroit.index)" :class="{'bg-orange-500': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
-                <div v-if="grilleDeJeu[endroit.index]?.verrouille === true || endroit.index === caseActive" >{{ grilleDeJeu[endroit.index]?.valeur }}</div>
+            <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" @click="rendreActif(endroit.index)" :class="{'bg-orange-300': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
+                <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" >{{ grilleDeJeu[endroit.index]?.valeur }}</div>
                 <div v-else></div> <!--Case non-verrouille donc libre pour la remplir-->
-                <div v-if="endroit.index === caseActive" class=" top-full left-0 z-10 flex gap-2 rounded-3xl shadow-fuchsia-600" style="position:absolute">
-                    <button v-for="chiffre in ListeTailGril" :key="chiffre" @click="ecrireValeur(chiffre)">{{chiffre}}</button>
-                    <button @click="grilleDeJeu.valeur[caseActive] = null">X</button>
+                <div v-if="endroit.index === caseActive" class="top-full left-0 z-10 flex gap-2 rounded-2xl shadow-2xl bg-emerald-500 shadow-fuchsia-600" style="position: absolute">
+                    <button v-for="chiffre in ListeTailGril" :key="chiffre" @click.stop="ecrireValeur(chiffre)">{{chiffre}}</button> <!--click.stop permet d'arreter la porpagation du click-->
+                    <button @click.stop="ecrireValeur(null)">X</button>
                 </div>
             </div> <!--là ici on crée les carrés avec les bords-->
             <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-3 min-w-3"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
