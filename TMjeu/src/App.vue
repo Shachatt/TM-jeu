@@ -12,6 +12,16 @@ function GrilleVide(n:number): Casevide[] { //comprendre que les cases acceptent
     // !!!!! modifier pour tout, ne plus se concentrer sur 4
 const tailleGrille:number = 4
 const grille = GrilleVide(tailleGrille) //on a notre grille qui à un côté variable 
+
+function creerListeNb(){
+    const listeTailleGrille: number[] = []
+    for (let i = 1; i < tailleGrille + 1; i++){ //comme ça on pousse tous les chiffres de 1 à la taille qu'on a besoin dans une liste
+        listeTailleGrille.push(i)
+    }
+    return listeTailleGrille
+}
+const ListeTailGril = creerListeNb()
+
 //fonction pour se repérer dans la grille
 function ligne(i:number) { 
     return Math.floor(i/tailleGrille) //math.floor évite les virgules
@@ -39,15 +49,6 @@ function pasmemeLigne(grille:Casevide[],index:number, valeur:number){
 function peutPlacer(grille:Casevide[],index:number, valeur:number){
     return pasmemeColonne(grille,index,valeur) && pasmemeLigne(grille,index,valeur) 
 }
-
-function creerListeNb(){
-    const listeTailleGrille: number[] = []
-    for (let i = 1; i < tailleGrille + 1; i++){ //comme ça on pousse tous les chiffres de 1 à la taille qu'on a besoin dans une liste
-        listeTailleGrille.push(i)
-    }
-    return listeTailleGrille
-}
-const ListeTailGril = creerListeNb()
 
 function melanger(tableau: number[]): number[] { // number dedans : le type dans le tableau, ext ce qui va en sortir
     const restants = [...tableau]   //le spread(...) consiste à étaler son contenu, ça crée une copie (car sinon c'est dans même case de stockage)
@@ -85,7 +86,7 @@ function grilleInequation(grille:Casevide[]){
     for (let i=0;i<tailleGrille*tailleGrille;i++){
         const valgrille = grille[i]?.valeur
         if (valgrille==null){throw new Error("case vide")}
-        if (3 !== colonne(i)) {//côté de droite
+        if (tailleGrille-1 !== colonne(i)) {//côté de droite
             const valAcomparerCote = grille[i+1]?.valeur
                if (valAcomparerCote==null){throw new Error("case vide")}
             if (valgrille < valAcomparerCote){ 
@@ -94,13 +95,13 @@ function grilleInequation(grille:Casevide[]){
                 InequationComplete.push({case1:i, case2:i+1,signe:">"})
             }
         }
-        if (3!== ligne(i)) { //case en dessous
-            const valAcomparerDessous = grille[i+4]?.valeur
+        if (tailleGrille-1!== ligne(i)) { //case en dessous
+            const valAcomparerDessous = grille[i+tailleGrille]?.valeur
                 if (valAcomparerDessous==null){throw new Error("case vide")}
             if (valgrille < valAcomparerDessous){
-                InequationComplete.push({case1:i, case2:i+4,signe:"<"})
+                InequationComplete.push({case1:i, case2:i+tailleGrille,signe:"<"})
             } else {
-                InequationComplete.push({case1:i, case2:i+4,signe:">"})
+                InequationComplete.push({case1:i, case2:i+tailleGrille,signe:">"})
             }
         }
     } 
