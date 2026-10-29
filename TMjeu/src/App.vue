@@ -210,6 +210,18 @@ for (let lign = 0; lign < tailleAffGrille; lign++){ //enft script setup est déj
         }
     }
 }
+
+function trouverInequation (endroit: Endroit){
+    if (endroit.forme === 'horizontal') {
+        return ineqDeJeu.value.find(item => item.case1 === endroit.gauche && item.case2 === endroit.droite)  // find permet de parcourir un tabelau et de s'arreter sur ele qui respecte ()  
+       
+    }
+    if (endroit.forme === 'vertical'){
+        return ineqDeJeu.value.find(item => item.case1 === endroit.haut && item.case2 === endroit.bas)        
+    }
+    return undefined
+}
+
 function trouverSigne(endroit: Endroit) {
     // 1. Vérifier si c'est horizontal
     if (endroit.forme === 'horizontal') {
@@ -226,6 +238,7 @@ function trouverSigne(endroit: Endroit) {
         return null
     }
 }
+
 // une piste est un segment compris entre deux lignes ou deux colonnes
 // const pistes = `repeat(${tailleGrille-1}, 3rem 1rem) 3rem` 
 const pistes = `repeat(${tailleGrille - 1}, 3rem 2rem) 3rem`
@@ -256,9 +269,9 @@ function ecrireValeur (valeur:number|null){
 
 function mettreCouleur(index:number){
     const CaseAcolorier = grilleDeJeu.value[index]
-    if (!CaseAcolorier){return}
+    if (!CaseAcolorier){return }
     if (CaseAcolorier.verrouille === true){
-        return 'text-black'
+        return 'text-black'  //renvoie une classe pour tailwindcss t donc va le colorier avec celle-ci
     }
     else if (CaseAcolorier.valeur === null){return ''}
     else if (!peutPlacer(grilleDeJeu.value,index,CaseAcolorier.valeur) || !testerInequation(grilleDeJeu.value,ineqDeJeu.value,index)){
@@ -267,16 +280,15 @@ function mettreCouleur(index:number){
         return 'text-green-400'
     }
 } 
-
 </script>
 
 <template>
     <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
         <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
             <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" @click="rendreActif(endroit.index)" :class="{'bg-orange-300': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
-                <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
+                <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)" class="text-2xl">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
                 <div v-else></div> <!--Case non-verrouille donc libre pour la remplir-->
-                <div v-if="endroit.index === caseActive" class="top-full left-0 z-10 flex gap-2 rounded-2xl shadow-2xl bg-emerald-500 shadow-fuchsia-600" style="position: absolute">
+                <div v-if="endroit.index === caseActive" class="text-1xl top-full left-0 z-10 flex gap-2 rounded-1xl bg-emerald-500 " style="position: absolute">
                     <button v-for="chiffre in ListeTailGril" :key="chiffre" @click.stop="ecrireValeur(chiffre)">{{chiffre}}</button> <!--click.stop permet d'arreter la porpagation du click-->
                     <button @click.stop="ecrireValeur(null)">X</button>
                 </div>
