@@ -32,6 +32,7 @@ function colonne(i:number) {
 //fonction pour contrôler s'il y même valeur sur la colonne / ligne
 function pasmemeColonne(grille:Casevide[],index:number, valeur:number){
     for (let i=colonne(index) ; i < tailleGrille*tailleGrille ; i += tailleGrille) { 
+        if (i === index){continue}
         if ( valeur === grille[i]?.valeur) { //grille[i].valeur : prend la valeur de ce qu'il y a à cet index : ?. permet d'éviter l'undefind
             return false
         }
@@ -40,6 +41,7 @@ function pasmemeColonne(grille:Casevide[],index:number, valeur:number){
 }
 function pasmemeLigne(grille:Casevide[],index:number, valeur:number){
     for (let  i = ligne(index)*tailleGrille ; i < ligne(index)*tailleGrille+tailleGrille ; i++) {
+        if (i === index){continue}
         if ( valeur === grille[i]?.valeur){
             return false
         }
@@ -252,13 +254,27 @@ function ecrireValeur (valeur:number|null){
     caseActive.value = null //permettra de fermer la bulle
 }
 
+function mettreCouleur(index:number){
+    const CaseAcolorier = grilleDeJeu.value[index]
+    if (!CaseAcolorier){return}
+    if (CaseAcolorier.verrouille === true){
+        return 'text-black'
+    }
+    else if (CaseAcolorier.valeur === null){return ''}
+    else if (!peutPlacer(grilleDeJeu.value,index,CaseAcolorier.valeur) || !testerInequation(grilleDeJeu.value,ineqDeJeu.value,index)){
+        return 'text-red-400'
+    } else {
+        return 'text-green-400'
+    }
+} 
+
 </script>
 
 <template>
     <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
         <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
             <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" @click="rendreActif(endroit.index)" :class="{'bg-orange-300': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
-                <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" >{{ grilleDeJeu[endroit.index]?.valeur }}</div>
+                <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
                 <div v-else></div> <!--Case non-verrouille donc libre pour la remplir-->
                 <div v-if="endroit.index === caseActive" class="top-full left-0 z-10 flex gap-2 rounded-2xl shadow-2xl bg-emerald-500 shadow-fuchsia-600" style="position: absolute">
                     <button v-for="chiffre in ListeTailGril" :key="chiffre" @click.stop="ecrireValeur(chiffre)">{{chiffre}}</button> <!--click.stop permet d'arreter la porpagation du click-->
