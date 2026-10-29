@@ -224,19 +224,7 @@ function trouverInequation (endroit: Endroit){
 
 function trouverSigne(endroit: Endroit) {
     // 1. Vérifier si c'est horizontal
-    if (endroit.forme === 'horizontal') {
-        const decouverte = ineqDeJeu.value.find(item => item.case1 === endroit.gauche && item.case2 === endroit.droite)  // find permet de parcourir un tabelau et de s'arreter sur ele qui respecte ()  
-        if (decouverte) {return decouverte.signe}
-        return null
-    }
-    if (endroit.forme === 'vertical'){
-        const decouverte = ineqDeJeu.value.find(item => item.case1 === endroit.haut && item.case2 === endroit.bas)        
-        if (decouverte) {return decouverte.signe}
-        return null
-    }
-    else {
-        return null
-    }
+    return trouverInequation(endroit)?.signe
 }
 
 // une piste est un segment compris entre deux lignes ou deux colonnes
@@ -280,6 +268,7 @@ function mettreCouleur(index:number){
         return 'text-green-400'
     }
 } 
+
 </script>
 
 <template>
