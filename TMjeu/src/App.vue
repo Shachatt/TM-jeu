@@ -255,9 +255,9 @@ function ecrireValeur (valeur:number|null){
     caseActive.value = null //permettra de fermer la bulle
 }
 
-function mettreCouleur(index:number){
+function mettreCouleur(index:number): string{
     const CaseAcolorier = grilleDeJeu.value[index]
-    if (!CaseAcolorier){return }
+    if (!CaseAcolorier){return ''}
     if (CaseAcolorier.verrouille === true){
         return 'text-black'  //renvoie une classe pour tailwindcss t donc va le colorier avec celle-ci
     }
@@ -270,12 +270,20 @@ function mettreCouleur(index:number){
 } 
 
 function respecterIneq(ineq:Inequation):boolean { //ineq.case est un index pas la valeur
-    const val1 = ineqDeJeu.value[ineq.case1]
-    const val2 = ineqDeJeu.value[ineq.case2]
+    const val1 = grilleDeJeu.value[ineq.case1]?.valeur
+    const val2 = grilleDeJeu.value[ineq.case2]?.valeur
+    console.log(val1, val2)
     if (val1 == null || val2 == null) {return true}
     if (ineq.signe === '<' && val1 >= val2) {return false}
     if (ineq.signe === '>' && val1 <= val2) {return false}
     return true
+}
+
+function colorierSigne(endroit: Endroit): string {
+    const ineq = trouverInequation(endroit) //quelle ineq on vérifie ?
+    if (ineq == null) {return 'text-black'} //si y'en a pas
+    if (!respecterIneq(ineq)) {return 'text-red-400'} // si violé
+    return 'text-black'//si y'a et rien violé
 }
 
 </script>   
@@ -292,7 +300,7 @@ function respecterIneq(ineq:Inequation):boolean { //ineq.case est un index pas l
                 </div>
             </div> <!--là ici on crée les carrés avec les bords-->
             <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-3 min-w-3"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
-                <div v-if="trouverSigne(endroit)" :style="{ transform: endroit.forme === 'vertical' ? 'rotate(90deg)' : 'rotate(0deg)'}">  {{ trouverSigne(endroit) }}
+                <div v-if="trouverSigne(endroit)" :style="{ transform: endroit.forme === 'vertical' ? 'rotate(90deg)' : 'rotate(0deg)'}" :class="colorierSigne(endroit)">  {{ trouverSigne(endroit) }}
                 </div>
             </div> 
             <div v-else-if ="endroit.forme === 'espace'"
