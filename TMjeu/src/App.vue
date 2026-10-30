@@ -269,7 +269,16 @@ function mettreCouleur(index:number){
     }
 } 
 
-</script>
+function respecterIneq(ineq:Inequation):boolean { //ineq.case est un index pas la valeur
+    const val1 = ineqDeJeu.value[ineq.case1]
+    const val2 = ineqDeJeu.value[ineq.case2]
+    if (val1 == null || val2 == null) {return true}
+    if (ineq.signe === '<' && val1 >= val2) {return false}
+    if (ineq.signe === '>' && val1 <= val2) {return false}
+    return true
+}
+
+</script>   
 
 <template>
     <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
