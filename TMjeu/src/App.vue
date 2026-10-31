@@ -313,7 +313,7 @@
 
     <template>
         <div class="flex items-center flex-col gap-6 py-8">
-            <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
+            <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes, position : 'relative'}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
                 <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
                     <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" class="flex items-center justify-center"  @click="rendreActif(endroit.index)" :class="{'bg-pink-200': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
                         <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)" class="text-2xl font-semibold ">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
@@ -329,6 +329,9 @@
                     </div> 
                     <div v-else-if ="endroit.forme === 'espace'"></div>
                 </template> <!--si on note template/ c'est une balise qui s'autoferme-->
+                <div v-if="grilleFinie" class="absolute inset-0 flex items-center justify-center bg-white/75">
+                    <div class="px-5 py-3 rounded-2xl bg-blue-300 text-zinc-700 font-bold text-2xl text-center shadow-2xl">Félicitations !<br /> Tu as résolu la grille !</div>
+                </div> <!--inset-0 se colle au 4 bord du parent-->
             </div>
             <!--On crée un nouveau parent pas de la grille pour créer un bouton en dessus de celle-ci-->
             <button v-if="grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-pink-300 ">Nouvelle Partie !</button>
