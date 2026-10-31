@@ -320,7 +320,7 @@ function nouveauJeu(){
             </template> <!--si on note template/ c'est une balise qui s'autoferme-->
         </div>
         <!--On crée un nouveau parent pas de la grille pour créer un bouton en dessus de celle-ci-->
-        <button @click="nouveauJeu" class="bg-red-700 text-white px-4 py-2 rounded-2xl hover:bg-red-900 mt-5">Nouvelle partie !</button>
+        <button @click="nouveauJeu" class="bg-red-700 text-white px-4 py-2 rounded-2xl hover:bg-red-900 mt-5">Nouvelle Partie !</button>
     </div>
 </template>
 
