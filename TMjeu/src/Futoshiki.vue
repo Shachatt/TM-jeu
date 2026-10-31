@@ -307,14 +307,27 @@ function nouveauJeu(){
 //générer première grille à la fin pour avoir toutes les constantes au même endroit
 nouveauJeu()
 
+const etatDeEcran = ref<'accueil' | 'jeu'>('accueil')
+function changerEtat(){
+    if (etatDeEcran.value === 'accueil'){
+        return etatDeEcran.value = 'jeu'
+    } else {return etatDeEcran.value = 'accueil'}
+}
+
 </script>   
 
 <template>
     <div class="flex items-center flex-col gap-6 py-8">
+        <div v-if="etatDeEcran === 'accueil'">
+            <button @click="changerEtat">Jouer !</button>
+            <select v-model="tailleChoisie" class="bg-blue-200 hover:bg-blue-300">
+                <option v-for="n in 4" :key="n" :value="n + 2">{{ n+2 }}</option>
+            </select>
+        </div>
         <p class="text-center text-4xl font-semibold font-serif"> Futoshiki </p>
         <p class="text-center"> <i>Règle : pas le même chiffre sur la même colonne et ligne, <br/> 
             respecter les inéquations</i></p>
-        <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes, position : 'relative'}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
+        <div v-if="etatDeEcran === 'jeu'" :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes, position : 'relative'}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
             <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
                 <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" class="flex items-center justify-center"  @click="rendreActif(endroit.index)" :class="{'bg-pink-200': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
                     <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)" class="text-2xl font-semibold ">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
