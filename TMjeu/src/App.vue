@@ -1,328 +1,336 @@
-<script setup lang="ts">
-import { ref } from 'vue';
-// grile vide mais l'index est comme un trait
-type Casevide = {valeur:number|null, verrouille:boolean} //comprend que valeur peut etre null ou9 un nombre
-function GrilleVide(n:number): Casevide[] { //comprendre que les cases acceptent valeur accepte null et nmber
-    const arr : Casevide[]=[]
-    for (let i=0;i<n*n;i++){   //for (d'où on part ; jusqu'où on va ; quel jump on fait)
-        arr.push({ valeur: null, verrouille: false})
-    }
-    return arr
-    }
-    // !!!!! modifier pour tout, ne plus se concentrer sur 4
-const tailleGrille:number = 4
-const grille = GrilleVide(tailleGrille) //on a notre grille qui à un côté variable 
-
-function creerListeNb(){
-    const listeTailleGrille: number[] = []
-    for (let i = 1; i < tailleGrille + 1; i++){ //comme ça on pousse tous les chiffres de 1 à la taille qu'on a besoin dans une liste
-        listeTailleGrille.push(i)
-    }
-    return listeTailleGrille
-}
-const ListeTailGril = creerListeNb()
-
-//fonction pour se repérer dans la grille
-function ligne(i:number) { 
-    return Math.floor(i/tailleGrille) //math.floor évite les virgules
-}
-function colonne(i:number) {
-    return i % tailleGrille
-}
-//fonction pour contrôler s'il y même valeur sur la colonne / ligne
-function pasmemeColonne(grille:Casevide[],index:number, valeur:number){
-    for (let i=colonne(index) ; i < tailleGrille*tailleGrille ; i += tailleGrille) { 
-        if (i === index){continue}
-        if ( valeur === grille[i]?.valeur) { //grille[i].valeur : prend la valeur de ce qu'il y a à cet index : ?. permet d'éviter l'undefind
-            return false
+    <script setup lang="ts">
+    import { ref, computed } from 'vue';
+    // grile vide mais l'index est comme un trait
+    type Casevide = {valeur:number|null, verrouille:boolean} //comprend que valeur peut etre null ou9 un nombre
+    function GrilleVide(n:number): Casevide[] { //comprendre que les cases acceptent valeur accepte null et nmber
+        const arr : Casevide[]=[]
+        for (let i=0;i<n*n;i++){   //for (d'où on part ; jusqu'où on va ; quel jump on fait)
+            arr.push({ valeur: null, verrouille: false})
         }
-    }
-    return true
-}
-function pasmemeLigne(grille:Casevide[],index:number, valeur:number){
-    for (let  i = ligne(index)*tailleGrille ; i < ligne(index)*tailleGrille+tailleGrille ; i++) {
-        if (i === index){continue}
-        if ( valeur === grille[i]?.valeur){
-            return false
+        return arr
         }
+        // !!!!! modifier pour tout, ne plus se concentrer sur 4
+    const tailleGrille:number = 4
+    const grille = GrilleVide(tailleGrille) //on a notre grille qui à un côté variable 
+
+    function creerListeNb(){
+        const listeTailleGrille: number[] = []
+        for (let i = 1; i < tailleGrille + 1; i++){ //comme ça on pousse tous les chiffres de 1 à la taille qu'on a besoin dans une liste
+            listeTailleGrille.push(i)
+        }
+        return listeTailleGrille
     }
-    return true
-}
-function peutPlacer(grille:Casevide[],index:number, valeur:number){
-    return pasmemeColonne(grille,index,valeur) && pasmemeLigne(grille,index,valeur) 
-}
+    const ListeTailGril = creerListeNb()
 
-function melanger(tableau: number[]): number[] { // number dedans : le type dans le tableau, ext ce qui va en sortir
-    const restants = [...tableau]   //le spread(...) consiste à étaler son contenu, ça crée une copie (car sinon c'est dans même case de stockage)
-    const resultat: number[] = [] //si il y a : number[] c'est pour préciser que le résultat sera seulement un nombre ? et les deux [] pour dire que la case est actuellement vide ?
-    while (restants.length > 0) { // le tableau des restants se vide, donc on continue de faire tant qu'il y aqlch dans le tableau
-        const i = Math.floor(Math.random() * restants.length) //random trouve un décimal entre 0 et(*) la longueur restante, floor c'est pour arrondir vers la bas, 4-3-2-1 
-        resultat.push(...restants.splice(i, 1))//push ajoute des éléments à la fin d'un tableau, splice enleve éé et return un tableau[] et les point servent à envoyer un number
-    } //fonction générique de mélange de tableau
-    return resultat //car c'est ce qu'on a besoin
-}
-
-function placerChiffre(grille:Casevide[],index: number): boolean { // on rentre un chiffre et la fonction nous rend un boolean
-    if (index >= tailleGrille*tailleGrille) { //vérifie que les 16 (0 à 15) cases sont remplis, si oui on arrête tout
+    //fonction pour se repérer dans la grille
+    function ligne(i:number) { 
+        return Math.floor(i/tailleGrille) //math.floor évite les virgules
+    }
+    function colonne(i:number) {
+        return i % tailleGrille
+    }
+    //fonction pour contrôler s'il y même valeur sur la colonne / ligne
+    function pasmemeColonne(grille:Casevide[],index:number, valeur:number){
+        for (let i=colonne(index) ; i < tailleGrille*tailleGrille ; i += tailleGrille) { 
+            if (i === index){continue}
+            if ( valeur === grille[i]?.valeur) { //grille[i].valeur : prend la valeur de ce qu'il y a à cet index : ?. permet d'éviter l'undefind
+                return false
+            }
+        }
         return true
     }
-    const caseCourante = grille[index] //c'est las case actuelle avec l'index dune case de notre grille
-    if (!caseCourante) {return false} //vérifie si case existe, !qlch = si qlch est faux on return false, donc si ça existe pas, donc ça vérifie pour la suite
-    const candidats = melanger(ListeTailGril)//ici va utiliser la fonction pour recréer un tableau avec 1 2 3 et 4 mélangé. ça sort un tableau ATTENTION comment je fais pour le rendre muable au chgmt de taille de grille
-    for (const candidat of candidats) { //for of est une bucle qui parcourt les valeurs du tableau, sans passer par index : "pour chacun des chiffres de la liste"
-        if (peutPlacer(grille, index, candidat)) {
-            caseCourante.valeur = candidat // if true, alors on peut écrire la valeur dans la case
-            if (placerChiffre(grille,index + 1)) { // si la case d'après renvoie aussi true alors c'est nice. RECURSIVITE la fonction se relance pour les case suivantes
-                return true
+    function pasmemeLigne(grille:Casevide[],index:number, valeur:number){
+        for (let  i = ligne(index)*tailleGrille ; i < ligne(index)*tailleGrille+tailleGrille ; i++) {
+            if (i === index){continue}
+            if ( valeur === grille[i]?.valeur){
+                return false
             }
-            caseCourante.valeur = null // si la case suivant ne fonctionne pas, on efface le chiffre
+        }
+        return true
+    }
+    function peutPlacer(grille:Casevide[],index:number, valeur:number){
+        return pasmemeColonne(grille,index,valeur) && pasmemeLigne(grille,index,valeur) 
+    }
+
+    function melanger(tableau: number[]): number[] { // number dedans : le type dans le tableau, ext ce qui va en sortir
+        const restants = [...tableau]   //le spread(...) consiste à étaler son contenu, ça crée une copie (car sinon c'est dans même case de stockage)
+        const resultat: number[] = [] //si il y a : number[] c'est pour préciser que le résultat sera seulement un nombre ? et les deux [] pour dire que la case est actuellement vide ?
+        while (restants.length > 0) { // le tableau des restants se vide, donc on continue de faire tant qu'il y aqlch dans le tableau
+            const i = Math.floor(Math.random() * restants.length) //random trouve un décimal entre 0 et(*) la longueur restante, floor c'est pour arrondir vers la bas, 4-3-2-1 
+            resultat.push(...restants.splice(i, 1))//push ajoute des éléments à la fin d'un tableau, splice enleve éé et return un tableau[] et les point servent à envoyer un number
+        } //fonction générique de mélange de tableau
+        return resultat //car c'est ce qu'on a besoin
+    }
+
+    function placerChiffre(grille:Casevide[],index: number): boolean { // on rentre un chiffre et la fonction nous rend un boolean
+        if (index >= tailleGrille*tailleGrille) { //vérifie que les 16 (0 à 15) cases sont remplis, si oui on arrête tout
+            return true
+        }
+        const caseCourante = grille[index] //c'est las case actuelle avec l'index dune case de notre grille
+        if (!caseCourante) {return false} //vérifie si case existe, !qlch = si qlch est faux on return false, donc si ça existe pas, donc ça vérifie pour la suite
+        const candidats = melanger(ListeTailGril)//ici va utiliser la fonction pour recréer un tableau avec 1 2 3 et 4 mélangé. ça sort un tableau ATTENTION comment je fais pour le rendre muable au chgmt de taille de grille
+        for (const candidat of candidats) { //for of est une bucle qui parcourt les valeurs du tableau, sans passer par index : "pour chacun des chiffres de la liste"
+            if (peutPlacer(grille, index, candidat)) {
+                caseCourante.valeur = candidat // if true, alors on peut écrire la valeur dans la case
+                if (placerChiffre(grille,index + 1)) { // si la case d'après renvoie aussi true alors c'est nice. RECURSIVITE la fonction se relance pour les case suivantes
+                    return true
+                }
+                caseCourante.valeur = null // si la case suivant ne fonctionne pas, on efface le chiffre
+            }
+        }
+
+        return false //si les quatres on échoué valeur on échoué on retourne false après avoir effacé la valeur de la case
+    }
+
+    type Inequation = {case1:number, case2:number,signe:">"|"<"}
+    // Crée les inéquation en fonction de la grille
+    function grilleInequation(grille:Casevide[]){
+        const InequationComplete: Inequation[] = []//tableau vide
+        for (let i=0;i<tailleGrille*tailleGrille;i++){
+            const valgrille = grille[i]?.valeur
+            if (valgrille==null){throw new Error("case vide")}
+            if (tailleGrille-1 !== colonne(i)) {//côté de droite
+                const valAcomparerCote = grille[i+1]?.valeur
+                if (valAcomparerCote==null){throw new Error("case vide")}
+                if (valgrille < valAcomparerCote){ 
+                    InequationComplete.push({case1:i, case2:i+1,signe:"<"}) 
+                } else {
+                    InequationComplete.push({case1:i, case2:i+1,signe:">"})
+                }
+            }
+            if (tailleGrille-1!== ligne(i)) { //case en dessous
+                const valAcomparerDessous = grille[i+tailleGrille]?.valeur
+                    if (valAcomparerDessous==null){throw new Error("case vide")}
+                if (valgrille < valAcomparerDessous){
+                    InequationComplete.push({case1:i, case2:i+tailleGrille,signe:"<"})
+                } else {
+                    InequationComplete.push({case1:i, case2:i+tailleGrille,signe:">"})
+                }
+            }
+        } 
+        return InequationComplete
+    }
+    function testerInequation(grille:Casevide[], liste:Inequation[],index:number): boolean{
+        for (const InequationComplete of liste){
+            if (InequationComplete.case1 !== index && InequationComplete.case2 !== index){
+                continue}
+            const val1 = grille[InequationComplete.case1]?.valeur
+            const val2 = grille[InequationComplete.case2]?.valeur
+            if (val1 == null || val2 == null){ //si on compare une case avec une pleine ça rendra faux
+                continue
+            } 
+            if (">" === InequationComplete.signe && val1 < val2){
+                return false
+            }
+            if ("<" === InequationComplete.signe && val1 > val2){
+                return false
+            }
+        }
+        return true
+    }
+    function unicite(grille:Casevide[],liste:Inequation[],index:number){
+        let solution = 0
+        if (index >= tailleGrille*tailleGrille){
+            return 1
+        }
+        const caseCourante = grille[index]
+        if (!caseCourante) {return 0}
+        if (caseCourante.verrouille){return unicite(grille,liste,index+1)}
+        const candidats = melanger(ListeTailGril) //regarder comment faire pour avoir liste de nombre de la taille d'un coté de grille
+        for (const candidat of candidats){
+            if (peutPlacer(grille,index,candidat)){ 
+                caseCourante.valeur = candidat //écrire la valeur dedans si seulement ça convient
+                if (testerInequation(grille,liste,index)){
+                    solution += unicite(grille, liste, index + 1) 
+                }
+            }
+            caseCourante.valeur = null
+            if (solution >= 2){
+                break
+            }
+        }
+        return solution
+    }
+    function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signifie que la fonction renvoie rien, va juste modifié la grille et tableau
+        for (const CaseMtn of grille ){ //On verrouille toutes les cases de la grille comme ça pas de changement dans notre grille initial
+            CaseMtn.verrouille = true 
+        }
+        const indices:number[] = [] //on va construire une grille de 0 à 15 et ensuite la mélanger pour les index
+        for (let i = 0; i < grille.length ; i++){
+            indices.push(i) //utiliser push pour ajouter un élé au tableau vide
+        }
+        const indicesMelanges = melanger(indices)
+        // ensuite on va retirer les chiffres et faire attention si problème d'unicité
+        for (const index of indicesMelanges){ 
+            const caseCourante = grille[index] //on parle de la case à cet index (donc valeur et verrouille)
+            if (!caseCourante) continue
+            const ancienneValeur = caseCourante.valeur //l'ancienne valeur est celle qu'on va essayer d'enlever car si unicité ne va pas on peut la remettre
+            caseCourante.valeur = null
+            caseCourante.verrouille = false
+            if (unicite(grille,liste,0) !== 1){  //s'il n'existe pas qu'une solution alors il faut pas retirer la valeur
+                caseCourante.valeur = ancienneValeur
+                caseCourante.verrouille = true //ça nous permet de retirer l'enlevement du chiffre
+            }
+        }
+        //ici on retire inéquation
+        for (let k = liste.length - 1; k >= 0; k--){
+            const retiree = liste.splice(k, 1)[0]  //donc rend un tableau et [0] est le premier élé
+            if (!retiree) continue
+            if (unicite(grille,liste,0) !== 1){
+                liste.splice(k, 0, retiree) //k va supprimer 0 élé à la position k et insère le retiree (donc on remet l'inéquation)
+            }
+        }
+    }
+    // d'abord génération de grille avant de rendre modifiable
+    placerChiffre(grille,0)
+    const Listeineq = grilleInequation(grille)
+    enleverEle(grille,Listeineq)
+    // chgmt pour rendre réactif le script pour template, à la fin pour que cela ne change pas lors du passage de toutes les fonction pour générer une grille jouable
+    const grilleDeJeu = ref(grille)
+    const ineqDeJeu = ref(Listeineq)
+    // ici cela crée la grille pour laffichage en incluant chiffre et ineq, mais toujours de mnière variable
+    const tailleAffGrille = 2 * tailleGrille - 1 //d'abord en double et on en soustrait un
+    // on crée la liste des emplacement entre case
+    type Endroit = {forme: 'carre', index:number} | {forme: 'vertical', haut:number, bas:number} | {forme: 'horizontal', gauche:number, droite:number} | {forme:'espace'} //les cases ont l'index de 0-15
+    const endroits: Endroit[] = []
+    for (let lign = 0; lign < tailleAffGrille; lign++){ //enft script setup est déjà le corps d'une fonction donc va exécuter tout de haut en bas
+        for (let colonn = 0; colonn < tailleAffGrille; colonn++){ //1ere for passe dans les lignes et ensuite 2eme colonne des lignes, ne s'enregistre pas 
+            if (lign % 2 === 0 && colonn % 2 === 0){ //la c'est pour que les deux valeurs soient paires c'est les carrés
+                endroits.push({forme:'carre', index:tailleGrille * (lign/2) + (colonn/2)}) //on y inclus l'index pour la petite grille carré, pas de problème car toujours chiffre pair -> %2
+            } else {
+                if (lign%2!==0 && colonn%2===0){
+                    const idx1 = tailleGrille * ((lign-1)/2) + (colonn/2)
+                    const idx2 = idx1 + tailleGrille
+                    endroits.push({forme: 'vertical', haut:idx1, bas:idx2})
+                } else if (lign%2===0 && colonn%2!==0){
+                    const idx1 = tailleGrille * (lign/2) + ((colonn - 1)/2) //donc on garde le même style que dans carré, la constante est-elle au bonne endroit ?
+                    const idx2 = tailleGrille * (lign/2) + ((colonn + 1)/2) 
+                    endroits.push({forme: 'horizontal', gauche:idx1, droite:idx2})
+                } else {
+                endroits.push({forme: 'espace'}) }
+            }
         }
     }
 
-    return false //si les quatres on échoué valeur on échoué on retourne false après avoir effacé la valeur de la case
-}
+    function trouverInequation (endroit: Endroit){
+        if (endroit.forme === 'horizontal') {
+            return ineqDeJeu.value.find(item => item.case1 === endroit.gauche && item.case2 === endroit.droite)  // find permet de parcourir un tabelau et de s'arreter sur ele qui respecte ()  
+        
+        }
+        if (endroit.forme === 'vertical'){
+            return ineqDeJeu.value.find(item => item.case1 === endroit.haut && item.case2 === endroit.bas)        
+        }
+        return undefined
+    }
 
-type Inequation = {case1:number, case2:number,signe:">"|"<"}
-// Crée les inéquation en fonction de la grille
-function grilleInequation(grille:Casevide[]){
-    const InequationComplete: Inequation[] = []//tableau vide
-    for (let i=0;i<tailleGrille*tailleGrille;i++){
-        const valgrille = grille[i]?.valeur
-        if (valgrille==null){throw new Error("case vide")}
-        if (tailleGrille-1 !== colonne(i)) {//côté de droite
-            const valAcomparerCote = grille[i+1]?.valeur
-               if (valAcomparerCote==null){throw new Error("case vide")}
-            if (valgrille < valAcomparerCote){ 
-                InequationComplete.push({case1:i, case2:i+1,signe:"<"}) 
+    function trouverSigne(endroit: Endroit) {
+        // 1. Vérifier si c'est horizontal
+        return trouverInequation(endroit)?.signe
+    }
+
+    // une piste est un segment compris entre deux lignes ou deux colonnes
+    // const pistes = `repeat(${tailleGrille-1}, 3rem 1rem) 3rem` 
+    const pistes = `repeat(${tailleGrille - 1}, 3rem 2rem) 3rem`
+    //permet de déclarer la piste il y en a 7, mais je capte pas vraiment comment çA se crée, les rem est une unité relative à la taille de police
+    // répète 3 x (3x16px), repete toute la liste donc 3x une liste de 3 et 1 et le dernier c'est trois
+    // `` crée une chaine qui passe à la ligne et le résultat fonction ${} est une chiane de caractère et ${} disparait
+
+    const grilleFinie = computed(() => {
+        for (let i = 0 ; i < tailleGrille*tailleGrille ; i++){
+            const valeurActive = grilleDeJeu.value[i]?.valeur
+            if (valeurActive == null){return false}
+            if (!peutPlacer(grilleDeJeu.value,i,valeurActive) || !testerInequation(grilleDeJeu.value,ineqDeJeu.value,i)){
+            return false 
+           } }
+           return true
+    });
+
+    const caseActive = ref<number | null>(null)
+    function rendreActif (index:number){
+        const caseActu = grilleDeJeu.value[index]
+        if (!caseActu) return
+        if (grilleFinie.value) return
+        if (caseActu.verrouille === false) {
+            if (caseActive.value !== index){
+                caseActive.value = index
             } else {
-                InequationComplete.push({case1:i, case2:i+1,signe:">"})
+                caseActive.value = null
             }
         }
-        if (tailleGrille-1!== ligne(i)) { //case en dessous
-            const valAcomparerDessous = grille[i+tailleGrille]?.valeur
-                if (valAcomparerDessous==null){throw new Error("case vide")}
-            if (valgrille < valAcomparerDessous){
-                InequationComplete.push({case1:i, case2:i+tailleGrille,signe:"<"})
-            } else {
-                InequationComplete.push({case1:i, case2:i+tailleGrille,signe:">"})
-            }
+        console.log(index)
+    }
+
+    function ecrireValeur (valeur:number|null){
+        if (caseActive.value === null) return
+        const caseAEcrire = grilleDeJeu.value[caseActive.value]
+        if (!caseAEcrire) return
+        caseAEcrire.valeur = valeur
+        caseActive.value = null //permettra de fermer la bulle
+    }
+
+    function mettreCouleur(index:number): string{
+        const CaseAcolorier = grilleDeJeu.value[index]
+        if (!CaseAcolorier){return ''}
+        if (CaseAcolorier.verrouille === true){
+            return 'text-black'  //renvoie une classe pour tailwindcss t donc va le colorier avec celle-ci
+        }
+        else if (CaseAcolorier.valeur === null){return ''}
+        else if (!peutPlacer(grilleDeJeu.value,index,CaseAcolorier.valeur) || !testerInequation(grilleDeJeu.value,ineqDeJeu.value,index)){
+            return 'text-red-400'
+        } else {
+            return 'text-green-500'
         }
     } 
-    return InequationComplete
-}
-function testerInequation(grille:Casevide[], liste:Inequation[],index:number): boolean{
-    for (const InequationComplete of liste){
-        if (InequationComplete.case1 !== index && InequationComplete.case2 !== index){
-            continue}
-        const val1 = grille[InequationComplete.case1]?.valeur
-        const val2 = grille[InequationComplete.case2]?.valeur
-        if (val1 == null || val2 == null){ //si on compare une case avec une pleine ça rendra faux
-            continue
-        } 
-        if (">" === InequationComplete.signe && val1 < val2){
-            return false
-        }
-        if ("<" === InequationComplete.signe && val1 > val2){
-            return false
-        }
-    }
-    return true
-}
-function unicite(grille:Casevide[],liste:Inequation[],index:number){
-    let solution = 0
-    if (index >= tailleGrille*tailleGrille){
-        return 1
-    }
-    const caseCourante = grille[index]
-    if (!caseCourante) {return 0}
-    if (caseCourante.verrouille){return unicite(grille,liste,index+1)}
-    const candidats = melanger(ListeTailGril) //regarder comment faire pour avoir liste de nombre de la taille d'un coté de grille
-    for (const candidat of candidats){
-        if (peutPlacer(grille,index,candidat)){ 
-            caseCourante.valeur = candidat //écrire la valeur dedans si seulement ça convient
-            if (testerInequation(grille,liste,index)){
-                solution += unicite(grille, liste, index + 1) 
-            }
-        }
-        caseCourante.valeur = null
-        if (solution >= 2){
-            break
-        }
-    }
-    return solution
-}
-function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signifie que la fonction renvoie rien, va juste modifié la grille et tableau
-    for (const CaseMtn of grille ){ //On verrouille toutes les cases de la grille comme ça pas de changement dans notre grille initial
-        CaseMtn.verrouille = true 
-    }
-    const indices:number[] = [] //on va construire une grille de 0 à 15 et ensuite la mélanger pour les index
-    for (let i = 0; i < grille.length ; i++){
-        indices.push(i) //utiliser push pour ajouter un élé au tableau vide
-    }
-    const indicesMelanges = melanger(indices)
-    // ensuite on va retirer les chiffres et faire attention si problème d'unicité
-    for (const index of indicesMelanges){ 
-        const caseCourante = grille[index] //on parle de la case à cet index (donc valeur et verrouille)
-        if (!caseCourante) continue
-        const ancienneValeur = caseCourante.valeur //l'ancienne valeur est celle qu'on va essayer d'enlever car si unicité ne va pas on peut la remettre
-        caseCourante.valeur = null
-        caseCourante.verrouille = false
-        if (unicite(grille,liste,0) !== 1){  //s'il n'existe pas qu'une solution alors il faut pas retirer la valeur
-            caseCourante.valeur = ancienneValeur
-            caseCourante.verrouille = true //ça nous permet de retirer l'enlevement du chiffre
-        }
-    }
-    //ici on retire inéquation
-    for (let k = liste.length - 1; k >= 0; k--){
-        const retiree = liste.splice(k, 1)[0]  //donc rend un tableau et [0] est le premier élé
-        if (!retiree) continue
-        if (unicite(grille,liste,0) !== 1){
-            liste.splice(k, 0, retiree) //k va supprimer 0 élé à la position k et insère le retiree (donc on remet l'inéquation)
-        }
-    }
-}
-// d'abord génération de grille avant de rendre modifiable
-placerChiffre(grille,0)
-const Listeineq = grilleInequation(grille)
-enleverEle(grille,Listeineq)
-// chgmt pour rendre réactif le script pour template, à la fin pour que cela ne change pas lors du passage de toutes les fonction pour générer une grille jouable
-const grilleDeJeu = ref(grille)
-const ineqDeJeu = ref(Listeineq)
-// ici cela crée la grille pour laffichage en incluant chiffre et ineq, mais toujours de mnière variable
-const tailleAffGrille = 2 * tailleGrille - 1 //d'abord en double et on en soustrait un
-// on crée la liste des emplacement entre case
-type Endroit = {forme: 'carre', index:number} | {forme: 'vertical', haut:number, bas:number} | {forme: 'horizontal', gauche:number, droite:number} | {forme:'espace'} //les cases ont l'index de 0-15
-const endroits: Endroit[] = []
-for (let lign = 0; lign < tailleAffGrille; lign++){ //enft script setup est déjà le corps d'une fonction donc va exécuter tout de haut en bas
-    for (let colonn = 0; colonn < tailleAffGrille; colonn++){ //1ere for passe dans les lignes et ensuite 2eme colonne des lignes, ne s'enregistre pas 
-        if (lign % 2 === 0 && colonn % 2 === 0){ //la c'est pour que les deux valeurs soient paires c'est les carrés
-            endroits.push({forme:'carre', index:tailleGrille * (lign/2) + (colonn/2)}) //on y inclus l'index pour la petite grille carré, pas de problème car toujours chiffre pair -> %2
-        } else {
-            if (lign%2!==0 && colonn%2===0){
-                const idx1 = tailleGrille * ((lign-1)/2) + (colonn/2)
-                const idx2 = idx1 + tailleGrille
-                endroits.push({forme: 'vertical', haut:idx1, bas:idx2})
-            } else if (lign%2===0 && colonn%2!==0){
-                const idx1 = tailleGrille * (lign/2) + ((colonn - 1)/2) //donc on garde le même style que dans carré, la constante est-elle au bonne endroit ?
-                const idx2 = tailleGrille * (lign/2) + ((colonn + 1)/2) 
-                endroits.push({forme: 'horizontal', gauche:idx1, droite:idx2})
-            } else {
-            endroits.push({forme: 'espace'}) }
-        }
-    }
-}
 
-function trouverInequation (endroit: Endroit){
-    if (endroit.forme === 'horizontal') {
-        return ineqDeJeu.value.find(item => item.case1 === endroit.gauche && item.case2 === endroit.droite)  // find permet de parcourir un tabelau et de s'arreter sur ele qui respecte ()  
-       
+    function respecterIneq(ineq:Inequation):boolean { //ineq.case est un index pas la valeur
+        const val1 = grilleDeJeu.value[ineq.case1]?.valeur
+        const val2 = grilleDeJeu.value[ineq.case2]?.valeur
+        if (val1 == null || val2 == null) {return true}
+        if (ineq.signe === '<' && val1 >= val2) {return false}
+        if (ineq.signe === '>' && val1 <= val2) {return false}
+        return true
     }
-    if (endroit.forme === 'vertical'){
-        return ineqDeJeu.value.find(item => item.case1 === endroit.haut && item.case2 === endroit.bas)        
+
+    function colorierSigne(endroit: Endroit): string {
+        const ineq = trouverInequation(endroit) //quelle ineq on vérifie ?
+        if (ineq == null) {return 'text-black'} //si y'en a pas
+        if (!respecterIneq(ineq)) {return 'text-red-400'} // si violé
+        return 'text-black'//si y'a et rien violé
     }
-    return undefined
-}
 
-function trouverSigne(endroit: Endroit) {
-    // 1. Vérifier si c'est horizontal
-    return trouverInequation(endroit)?.signe
-}
+    function nouveauJeu(){
+        caseActive.value = null
+        const nouvelleGrille = GrilleVide(tailleGrille)
+        placerChiffre(nouvelleGrille,0)
+        const IneqCalcul = grilleInequation(nouvelleGrille)
+        enleverEle(nouvelleGrille,IneqCalcul)
 
-// une piste est un segment compris entre deux lignes ou deux colonnes
-// const pistes = `repeat(${tailleGrille-1}, 3rem 1rem) 3rem` 
-const pistes = `repeat(${tailleGrille - 1}, 3rem 2rem) 3rem`
-//permet de déclarer la piste il y en a 7, mais je capte pas vraiment comment çA se crée, les rem est une unité relative à la taille de police
-// répète 3 x (3x16px), repete toute la liste donc 3x une liste de 3 et 1 et le dernier c'est trois
-// `` crée une chaine qui passe à la ligne et le résultat fonction ${} est une chiane de caractère et ${} disparait
-const caseActive = ref<number | null>(null)
-function rendreActif (index:number){
-    const caseActu = grilleDeJeu.value[index]
-    if (!caseActu) return
-    if (caseActu.verrouille === false) {
-        if (caseActive.value !== index){
-            caseActive.value = index
-        } else {
-            caseActive.value = null
-        }
+        grilleDeJeu.value = nouvelleGrille
+        ineqDeJeu.value = IneqCalcul
     }
-    console.log(index)
-}
 
-function ecrireValeur (valeur:number|null){
-    if (caseActive.value === null) return
-    const caseAEcrire = grilleDeJeu.value[caseActive.value]
-    if (!caseAEcrire) return
-    caseAEcrire.valeur = valeur
-    caseActive.value = null //permettra de fermer la bulle
-}
+    </script>   
 
-function mettreCouleur(index:number): string{
-    const CaseAcolorier = grilleDeJeu.value[index]
-    if (!CaseAcolorier){return ''}
-    if (CaseAcolorier.verrouille === true){
-        return 'text-black'  //renvoie une classe pour tailwindcss t donc va le colorier avec celle-ci
-    }
-    else if (CaseAcolorier.valeur === null){return ''}
-    else if (!peutPlacer(grilleDeJeu.value,index,CaseAcolorier.valeur) || !testerInequation(grilleDeJeu.value,ineqDeJeu.value,index)){
-        return 'text-red-400'
-    } else {
-        return 'text-green-500'
-    }
-} 
-
-function respecterIneq(ineq:Inequation):boolean { //ineq.case est un index pas la valeur
-    const val1 = grilleDeJeu.value[ineq.case1]?.valeur
-    const val2 = grilleDeJeu.value[ineq.case2]?.valeur
-    console.log(val1, val2)
-    if (val1 == null || val2 == null) {return true}
-    if (ineq.signe === '<' && val1 >= val2) {return false}
-    if (ineq.signe === '>' && val1 <= val2) {return false}
-    return true
-}
-
-function colorierSigne(endroit: Endroit): string {
-    const ineq = trouverInequation(endroit) //quelle ineq on vérifie ?
-    if (ineq == null) {return 'text-black'} //si y'en a pas
-    if (!respecterIneq(ineq)) {return 'text-red-400'} // si violé
-    return 'text-black'//si y'a et rien violé
-}
-
-function nouveauJeu(){
-    caseActive.value = null
-    const nouvelleGrille = GrilleVide(tailleGrille)
-    placerChiffre(nouvelleGrille,0)
-    const IneqCalcul = grilleInequation(nouvelleGrille)
-    enleverEle(nouvelleGrille,IneqCalcul)
-
-    grilleDeJeu.value = nouvelleGrille
-    ineqDeJeu.value = IneqCalcul
-}
-
-</script>   
-
-<template>
-    <div class="flex items-center flex-col gap-6 py-8">
-        <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
-            <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
-                <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" class="flex items-center justify-center"  @click="rendreActif(endroit.index)" :class="{'bg-pink-200': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
-                    <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)" class="text-2xl font-semibold ">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
-                    <div v-else></div> <!--Case non-verrouille donc libre pour la remplir-->
-                    <div v-if="endroit.index === caseActive" class="text-xl top-full left-0 z-10 flex gap-2 rounded-2xl bg-pink-300  " style="position: absolute">
-                        <button v-for="chiffre in ListeTailGril" :key="chiffre"  @click.stop="ecrireValeur(chiffre)" class="rounded-3xl hover:bg-pink-400 transition-colors font-semibold px-2 py-2">{{chiffre}}</button> <!--click.stop permet d'arreter la porpagation du click-->
-                        <button  @click.stop="ecrireValeur(null)" class=" rounded-3xl hover:bg-pink-400 transition-colors font-semibold px-2 py-2">X</button>
-                    </div>
-                </div> <!--là ici on crée les carrés avec les bords-->
-                <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-full min-w-full flex items-center justify-center overflow-hidden"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
-                    <div v-if="trouverSigne(endroit)" :style="{ transform: endroit.forme === 'vertical' ? 'rotate(90deg)' : 'rotate(0deg)'}" :class="colorierSigne(endroit)" class="text-2xl font-semibold leading-none inline-block">  {{ trouverSigne(endroit) }}
-                    </div>
-                </div> 
-                <div v-else-if ="endroit.forme === 'espace'"></div>
-            </template> <!--si on note template/ c'est une balise qui s'autoferme-->
+    <template>
+        <div class="flex items-center flex-col gap-6 py-8">
+            <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
+                <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
+                    <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" class="flex items-center justify-center"  @click="rendreActif(endroit.index)" :class="{'bg-pink-200': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
+                        <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)" class="text-2xl font-semibold ">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
+                        <div v-else></div> <!--Case non-verrouille donc libre pour la remplir-->
+                        <div v-if="endroit.index === caseActive" class="text-xl top-full left-0 z-10 flex gap-2 rounded-2xl bg-pink-300  " style="position: absolute">
+                            <button v-for="chiffre in ListeTailGril" :key="chiffre"  @click.stop="ecrireValeur(chiffre)" class="rounded-3xl hover:bg-pink-400 transition-colors font-semibold px-2 py-2">{{chiffre}}</button> <!--click.stop permet d'arreter la porpagation du click-->
+                            <button  @click.stop="ecrireValeur(null)" class=" rounded-3xl hover:bg-pink-400 transition-colors font-semibold px-2 py-2">X</button>
+                        </div>
+                    </div> <!--là ici on crée les carrés avec les bords-->
+                    <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-full min-w-full flex items-center justify-center overflow-hidden"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
+                        <div v-if="trouverSigne(endroit)" :style="{ transform: endroit.forme === 'vertical' ? 'rotate(90deg)' : 'rotate(0deg)'}" :class="colorierSigne(endroit)" class="text-2xl font-semibold leading-none inline-block">  {{ trouverSigne(endroit) }}
+                        </div>
+                    </div> 
+                    <div v-else-if ="endroit.forme === 'espace'"></div>
+                </template> <!--si on note template/ c'est une balise qui s'autoferme-->
+            </div>
+            <!--On crée un nouveau parent pas de la grille pour créer un bouton en dessus de celle-ci-->
+            <button v-if="grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-pink-300 ">Nouvelle Partie !</button>
         </div>
-        <!--On crée un nouveau parent pas de la grille pour créer un bouton en dessus de celle-ci-->
-        <button @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-pink-300 ">Nouvelle Partie !</button>
-    </div>
-</template>
-
-<style scoped>
-</style>
+    </template>
