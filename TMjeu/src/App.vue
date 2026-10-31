@@ -9,9 +9,8 @@ function GrilleVide(n:number): Casevide[] { //comprendre que les cases acceptent
     }
     return arr
     }
-        // !!!!! modifier pour tout, ne plus se concentrer sur 4
-const tailleGrille = ref<number>(4)
-const grille = GrilleVide(tailleGrille.value) //on a notre grille qui à un côté variable 
+
+const tailleGrille = ref<number>(4) //taille initial de la grille
 
 function creerListeNb(){
     const listeTailleGrille: number[] = []
@@ -53,7 +52,7 @@ function peutPlacer(grille:Casevide[],index:number, valeur:number){
 }
 function melanger(tableau: number[]): number[] { // number dedans : le type dans le tableau, ext ce qui va en sortir
     const restants = [...tableau]   //le spread(...) consiste à étaler son contenu, ça crée une copie (car sinon c'est dans même case de stockage)
-    const resultat: number[] = [] //si il y a : number[] c'est pour préciser que le résultat sera seulement un nombre ? et les deux [] pour dire que la case est actuellement vide ?
+    const resultat: number[] = [] //si il y a : number[] c'est pour préciser que le résultat sera seulement un nombre et les deux [] pour un tableau vide
     while (restants.length > 0) { // le tableau des restants se vide, donc on continue de faire tant qu'il y aqlch dans le tableau
         const i = Math.floor(Math.random() * restants.length) //random trouve un décimal entre 0 et(*) la longueur restante, floor c'est pour arrondir vers la bas, 4-3-2-1 
         resultat.push(...restants.splice(i, 1))//push ajoute des éléments à la fin d'un tableau, splice enleve éé et return un tableau[] et les point servent à envoyer un number
@@ -179,13 +178,9 @@ function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signi
         }
     }
 }
-    // d'abord génération de grille avant de rendre modifiable
-placerChiffre(grille,0)
-const Listeineq = grilleInequation(grille)
-enleverEle(grille,Listeineq)
-    // chgmt pour rendre réactif le script pour template, à la fin pour que cela ne change pas lors du passage de toutes les fonction pour générer une grille jouable
-const grilleDeJeu = ref(grille)
-const ineqDeJeu = ref(Listeineq)
+    // génération de tableau vide, remplit avec nouveau jeu
+const grilleDeJeu = ref<Casevide[]>([])
+const ineqDeJeu = ref<Inequation[]>([])
     // ici cela crée la grille pour laffichage en incluant chiffre et ineq, mais toujours de mnière variable
 const tailleAffGrille = computed(() => 2 * tailleGrille.value - 1) //d'abord en double et on en soustrait un
     // on crée la liste des emplacement entre case
@@ -236,7 +231,7 @@ const pistes = computed(() => `repeat(${tailleGrille.value - 1}, 3rem 2rem) 3rem
     // répète 3 x (3x16px), repete toute la liste donc 3x une liste de 3 et 1 et le dernier c'est trois
     // `` crée une chaine qui passe à la ligne et le résultat fonction ${} est une chiane de caractère et ${} disparait
 
-const grilleFinie = computed(() => {
+const grilleFinie = computed(() => { //pour voir si les grille est complète utilisé dans autre fonction
     for (let i = 0 ; i < tailleGrille.value*tailleGrille.value ; i++){
         const valeurActive = grilleDeJeu.value[i]?.valeur
         if (valeurActive == null){return false}
@@ -250,23 +245,23 @@ const caseActive = ref<number | null>(null)
 function rendreActif (index:number){
     const caseActu = grilleDeJeu.value[index]
     if (!caseActu) return
-    if (grilleFinie.value) return
-    if (caseActu.verrouille === false) {
+    if (grilleFinie.value) return //pour ne plus écrire lorsque que la grille est remplie
+    if (caseActu.verrouille === false) { //donc toutes les cases modifiables
         if (caseActive.value !== index){
             caseActive.value = index
         } else {
-            caseActive.value = null
+            caseActive.value = null //pour enlever la séléction si déjà selectionné
         }
     }
 }
 function ecrireValeur (valeur:number|null){
-    if (caseActive.value === null) return
+    if (caseActive.value === null) return //on écrit que dans case active
     const caseAEcrire = grilleDeJeu.value[caseActive.value]
     if (!caseAEcrire) return
     caseAEcrire.valeur = valeur
     caseActive.value = null //permettra de fermer la bulle
 }
-function mettreCouleur(index:number): string{
+function mettreCouleur(index:number): string{ //on donne une classe pour les chiffres
     const CaseAcolorier = grilleDeJeu.value[index]
     if (!CaseAcolorier){return ''}
     if (CaseAcolorier.verrouille === true){
@@ -283,9 +278,9 @@ function mettreCouleur(index:number): string{
 function respecterIneq(ineq:Inequation):boolean { //ineq.case est un index pas la valeur
     const val1 = grilleDeJeu.value[ineq.case1]?.valeur
     const val2 = grilleDeJeu.value[ineq.case2]?.valeur
-    if (val1 == null || val2 == null) {return true}
-    if (ineq.signe === '<' && val1 >= val2) {return false}
-    if (ineq.signe === '>' && val1 <= val2) {return false}
+    if (val1 == null || val2 == null) {return true} //si une valeur null alors pas tester
+    if (ineq.signe === '<' && val1 > val2) {return false} //deux inéquations fausses
+    if (ineq.signe === '>' && val1 < val2) {return false}
     return true
 }
 
@@ -300,7 +295,7 @@ const tailleChoisie = ref(tailleGrille.value)
 
 function nouveauJeu(){
     caseActive.value = null
-    tailleGrille.value = tailleChoisie.value
+    tailleGrille.value = tailleChoisie.value 
     const nouvelleGrille = GrilleVide(tailleGrille.value)
     placerChiffre(nouvelleGrille,0)
     const IneqCalcul = grilleInequation(nouvelleGrille)
@@ -308,19 +303,21 @@ function nouveauJeu(){
     grilleDeJeu.value = nouvelleGrille
     ineqDeJeu.value = IneqCalcul
 }
- 
+
+//générer première grille à la fin pour avoir toutes les constantes au même endroit
+nouveauJeu()
+
 </script>   
 
 <template>
     <div class="flex items-center flex-col gap-6 py-8">
         <p class="text-center text-4xl font-semibold font-serif"> Futoshiki </p>
-        <p class="text-center"> <i>Règle : pas le même chiffre sur la même colonne et ligne <br/> 
+        <p class="text-center"> <i>Règle : pas le même chiffre sur la même colonne et ligne, <br/> 
             respecter les inéquations</i></p>
         <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes, position : 'relative'}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
             <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
                 <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" class="flex items-center justify-center"  @click="rendreActif(endroit.index)" :class="{'bg-pink-200': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
                     <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)" class="text-2xl font-semibold ">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
-                    <div v-else></div> <!--Case non-verrouille donc libre pour la remplir-->
                     <div v-if="endroit.index === caseActive" class="text-xl top-full left-0 z-10 flex gap-2 rounded-2xl bg-pink-300  " style="position: absolute">
                         <button v-for="chiffre in ListeTailGril" :key="chiffre"  @click.stop="ecrireValeur(chiffre)" class="rounded-3xl hover:bg-pink-400 transition-colors font-semibold px-2 py-2">{{chiffre}}</button> <!--click.stop permet d'arreter la porpagation du click-->
                         <button  @click.stop="ecrireValeur(null)" class=" rounded-3xl hover:bg-pink-400 transition-colors font-semibold px-2 py-2">X</button>
@@ -339,9 +336,10 @@ function nouveauJeu(){
                 </div>
             </div> <!--inset-0 se colle au 4 bord du parent-->
         </div> <!--On crée un nouveau parent pas de la grille pour créer un bouton en dessus de celle-ci-->
-        <div v-if="grilleFinie" class="flex items-center justify-center gap-3">
-            <button @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-pink-300 ">Nouvelle Partie !</button>      
-            <select v-model="tailleChoisie" class="bg-blue-200 hover:bg-blue-300">
+        <div  class="flex items-center justify-center gap-3">
+            <button v-if="!grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-pink-300 ">Nouvelle grille</button>
+            <button v-if="grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-pink-300 ">Nouvelle Partie !</button>      
+            <select v-if="grilleFinie" v-model="tailleChoisie" class="bg-blue-200 hover:bg-blue-300">
                 <option v-for="n in 4" :key="n" :value="n + 2">{{ n+2 }}</option>
             </select> 
         </div> 
