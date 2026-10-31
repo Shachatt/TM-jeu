@@ -321,7 +321,8 @@ function lancerJeu(){
         <p class="text-center text-4xl font-semibold font-serif m-4"> Futoshiki </p>
         <div v-if="etatDeEcran === 'accueil'" class="flex flex-col items-center justify-center gap-3">
             <p class="mt-5 text-left"> <i><b>Règle :</b> <br/> - On ne peut pas avoir le même chiffre sur une même colonne ou une même ligne<br/> 
-            - Pour résoudre le puzzle il s'aider des inéquations</i></p>
+            - Pour résoudre le puzzle il s'aider des inéquations <br/>
+            - La grille de 6 met plus de temps à charger</i></p>
             <div class="flex items-center justify-center gap-4 mt-10">
                 <button @click="lancerJeu" class="bg-rose-300 text-black text-6xl font-semibold active:scale-95 px-6 py-4 rounded-2xl transition-all hover:bg-rose-400">Jouer !</button>
                 <select v-model="tailleChoisie" class="bg-rose-200 text-3xl hover:bg-rose-300">
