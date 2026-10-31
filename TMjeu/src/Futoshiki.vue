@@ -318,13 +318,13 @@ function lancerJeu(){
 
 <template>
     <div class="flex items-center flex-col gap-6 py-8">
-        <p class="text-center text-4xl font-semibold font-serif"> Futoshiki </p>
-        <div v-if="etatDeEcran === 'accueil'" class="flex items-center justify-center gap-4">
-            <p class="text-center"> <i>Règle : pas le même chiffre sur la même colonne et ligne, <br/> 
-            respecter les inéquations</i></p>
-            <div class="flex items-center justify-center gap-4">
-                <button @click="lancerJeu" class="bg-rose-300 text-black text-6xl font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-rose-400">Jouer !</button>
-                <select v-model="tailleChoisie" class="bg-rose-200 hover:bg-rose-300">
+        <p class="text-center text-4xl font-semibold font-serif m-4"> Futoshiki </p>
+        <div v-if="etatDeEcran === 'accueil'" class="flex flex-col items-center justify-center gap-3">
+            <p class="mt-5 text-left"> <i><b>Règle :</b> <br/> - On ne peut pas avoir le même chiffre sur une même colonne ou une même ligne<br/> 
+            - Pour résoudre le puzzle il s'aider des inéquations</i></p>
+            <div class="flex items-center justify-center gap-4 mt-10">
+                <button @click="lancerJeu" class="bg-rose-300 text-black text-6xl font-semibold active:scale-95 px-6 py-4 rounded-2xl transition-all hover:bg-rose-400">Jouer !</button>
+                <select v-model="tailleChoisie" class="bg-rose-200 text-3xl hover:bg-rose-300">
                     <option v-for="n in 4" :key="n" :value="n + 2">{{ n+2 }}</option>
                 </select>
             </div>
@@ -352,10 +352,11 @@ function lancerJeu(){
                 </div>
             </div> <!--inset-0 se colle au 4 bord du parent--> 
         </div> <!--On crée un nouveau parent pas de la grille pour créer un bouton en dessus de celle-ci-->
-        <div  class="flex items-center justify-center gap-3">
-            <button v-if="!grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-rose-300 ">Nouvelle grille</button>
-            <button v-if="grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-rose-300 ">Nouvelle Partie !</button>      
-            <select v-if="grilleFinie" v-model="tailleChoisie" class="bg-blue-200 hover:bg-blue-300">
+        <div  class="flex items-center justify-center gap-3 mt-3">
+            <button v-if="!grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-rose-300 mt-3">Nouvelle grille</button>
+            <button v-if="!grilleFinie" @click="lancerJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-rose-300 mt-3">Accueil</button>
+            <button v-if="grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-rose-300 mt-3 ">Nouvelle Partie !</button>      
+            <select v-if="grilleFinie" v-model="tailleChoisie" class="bg-blue-200 hover:bg-blue-300 text-xl mt-3">
                 <option v-for="n in 4" :key="n" :value="n + 2">{{ n+2 }}</option>
             </select> 
         </div>
