@@ -305,11 +305,11 @@ function nouveauJeu(){
 }
 
 //générer première grille à la fin pour avoir toutes les constantes au même endroit
-nouveauJeu()
 
 const etatDeEcran = ref<'accueil' | 'jeu'>('accueil')
-function changerEtat(){
+function lancerJeu(){
     if (etatDeEcran.value === 'accueil'){
+        nouveauJeu()
         return etatDeEcran.value = 'jeu'
     } else {return etatDeEcran.value = 'accueil'}
 }
@@ -318,22 +318,25 @@ function changerEtat(){
 
 <template>
     <div class="flex items-center flex-col gap-6 py-8">
-        <div v-if="etatDeEcran === 'accueil'">
-            <button @click="changerEtat">Jouer !</button>
-            <select v-model="tailleChoisie" class="bg-blue-200 hover:bg-blue-300">
-                <option v-for="n in 4" :key="n" :value="n + 2">{{ n+2 }}</option>
-            </select>
-        </div>
         <p class="text-center text-4xl font-semibold font-serif"> Futoshiki </p>
-        <p class="text-center"> <i>Règle : pas le même chiffre sur la même colonne et ligne, <br/> 
+        <div v-if="etatDeEcran === 'accueil'" class="flex items-center justify-center gap-4">
+            <p class="text-center"> <i>Règle : pas le même chiffre sur la même colonne et ligne, <br/> 
             respecter les inéquations</i></p>
-        <div v-if="etatDeEcran === 'jeu'" :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes, position : 'relative'}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
+            <div class="flex items-center justify-center gap-4">
+                <button @click="lancerJeu" class="bg-rose-300 text-black text-6xl font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-rose-400">Jouer !</button>
+                <select v-model="tailleChoisie" class="bg-rose-200 hover:bg-rose-300">
+                    <option v-for="n in 4" :key="n" :value="n + 2">{{ n+2 }}</option>
+                </select>
+            </div>
+        </div>
+        <div v-else>
+        <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes, position : 'relative'}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
             <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
-                <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" class="flex items-center justify-center"  @click="rendreActif(endroit.index)" :class="{'bg-pink-200': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
+                <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" class="flex items-center justify-center"  @click="rendreActif(endroit.index)" :class="{'bg-rose-200': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
                     <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)" class="text-2xl font-semibold ">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
-                    <div v-if="endroit.index === caseActive" class="text-xl top-full left-0 z-10 flex gap-2 rounded-2xl bg-pink-300  " style="position: absolute">
-                        <button v-for="chiffre in ListeTailGril" :key="chiffre"  @click.stop="ecrireValeur(chiffre)" class="rounded-3xl hover:bg-pink-400 transition-colors font-semibold px-2 py-2">{{chiffre}}</button> <!--click.stop permet d'arreter la porpagation du click-->
-                        <button  @click.stop="ecrireValeur(null)" class=" rounded-3xl hover:bg-pink-400 transition-colors font-semibold px-2 py-2">X</button>
+                    <div v-if="endroit.index === caseActive" class="text-xl top-full left-0 z-10 flex gap-2 rounded-2xl bg-rose-300  " style="position: absolute">
+                        <button v-for="chiffre in ListeTailGril" :key="chiffre"  @click.stop="ecrireValeur(chiffre)" class="rounded-3xl hover:bg-rose-400 transition-colors font-semibold px-2 py-2">{{chiffre}}</button> <!--click.stop permet d'arreter la porpagation du click-->
+                        <button  @click.stop="ecrireValeur(null)" class=" rounded-3xl hover:bg-rose-400 transition-colors font-semibold px-2 py-2">X</button>
                     </div>
                 </div> <!--là ici on crée les carrés avec les bords-->
                 <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-full min-w-full flex items-center justify-center overflow-hidden"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
@@ -347,14 +350,15 @@ function changerEtat(){
                     <p class="font-bold text-3xl">Félicitations !<br /> Tu as résolu la grille !</p>
                     <p class="text-1xl mt-2"><i>Teste une nouvelle taille!</i></p>
                 </div>
-            </div> <!--inset-0 se colle au 4 bord du parent-->
+            </div> <!--inset-0 se colle au 4 bord du parent--> 
         </div> <!--On crée un nouveau parent pas de la grille pour créer un bouton en dessus de celle-ci-->
         <div  class="flex items-center justify-center gap-3">
-            <button v-if="!grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-pink-300 ">Nouvelle grille</button>
-            <button v-if="grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-pink-300 ">Nouvelle Partie !</button>      
+            <button v-if="!grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-rose-300 ">Nouvelle grille</button>
+            <button v-if="grilleFinie" @click="nouveauJeu" class="bg-blue-300 text-zinc-700 font-semibold active:scale-95 px-4 py-2 rounded-2xl transition-all hover:bg-rose-300 ">Nouvelle Partie !</button>      
             <select v-if="grilleFinie" v-model="tailleChoisie" class="bg-blue-200 hover:bg-blue-300">
                 <option v-for="n in 4" :key="n" :value="n + 2">{{ n+2 }}</option>
             </select> 
-        </div> 
+        </div>
+        </div>
     </div>
 </template>
