@@ -313,6 +313,9 @@ function nouveauJeu(){
 
 <template>
     <div class="flex items-center flex-col gap-6 py-8">
+        <p class="text-center text-4xl font-semibold font-serif"> Futoshiki </p>
+        <p class="text-center"> <i>Règle : pas le même chiffre sur la même colonne et ligne <br/> 
+            respecter les inéquations</i></p>
         <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes, position : 'relative'}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
             <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
                 <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" class="flex items-center justify-center"  @click="rendreActif(endroit.index)" :class="{'bg-pink-200': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
@@ -330,7 +333,10 @@ function nouveauJeu(){
                 <div v-else-if ="endroit.forme === 'espace'"></div>
             </template> <!--si on note template/ c'est une balise qui s'autoferme-->
             <div v-if="grilleFinie" class="absolute inset-0 flex items-center justify-center bg-white/75">
-                <div class="px-5 py-3 rounded-2xl bg-blue-300 text-zinc-700 font-bold text-2xl text-center shadow-2xl">Félicitations !<br /> Tu as résolu la grille !</div>
+                <div class="px-5 py-3 rounded-2xl bg-blue-300 text-zinc-700 text-center shadow-2xl">
+                    <p class="font-bold text-3xl">Félicitations !<br /> Tu as résolu la grille !</p>
+                    <p class="text-1xl mt-2"><i>Teste une nouvelle taille!</i></p>
+                </div>
             </div> <!--inset-0 se colle au 4 bord du parent-->
         </div> <!--On crée un nouveau parent pas de la grille pour créer un bouton en dessus de celle-ci-->
         <div v-if="grilleFinie" class="flex items-center justify-center gap-3">
