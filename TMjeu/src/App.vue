@@ -83,6 +83,7 @@ function placerChiffre(grille:Casevide[],index: number): boolean { // on rentre 
 }
 
 type Inequation = {case1:number, case2:number,signe:">"|"<"}
+// Crée les inéquation en fonction de la grille
 function grilleInequation(grille:Casevide[]){
     const InequationComplete: Inequation[] = []//tableau vide
     for (let i=0;i<tailleGrille*tailleGrille;i++){
@@ -181,7 +182,7 @@ function enleverEle(grille:Casevide[], liste:Inequation[]):void{ //le void signi
     }
 }
 // d'abord génération de grille avant de rendre modifiable
-const grilleRemplie = placerChiffre(grille,0)
+placerChiffre(grille,0)
 const Listeineq = grilleInequation(grille)
 enleverEle(grille,Listeineq)
 // chgmt pour rendre réactif le script pour template, à la fin pour que cela ne change pas lors du passage de toutes les fonction pour générer une grille jouable
@@ -286,26 +287,40 @@ function colorierSigne(endroit: Endroit): string {
     return 'text-black'//si y'a et rien violé
 }
 
+function nouveauJeu(){
+    caseActive.value = null
+    const nouvelleGrille = GrilleVide(tailleGrille)
+    placerChiffre(nouvelleGrille,0)
+    const IneqCalcul = grilleInequation(nouvelleGrille)
+    enleverEle(nouvelleGrille,IneqCalcul)
+
+    grilleDeJeu.value = nouvelleGrille
+    ineqDeJeu.value = IneqCalcul
+}
+
 </script>   
 
 <template>
-    <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
-        <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
-            <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" @click="rendreActif(endroit.index)" :class="{'bg-orange-300': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
-                <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)" class="text-2xl">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
-                <div v-else></div> <!--Case non-verrouille donc libre pour la remplir-->
-                <div v-if="endroit.index === caseActive" class="text-1xl top-full left-0 z-10 flex gap-2 rounded-1xl bg-emerald-500 " style="position: absolute">
-                    <button v-for="chiffre in ListeTailGril" :key="chiffre" @click.stop="ecrireValeur(chiffre)">{{chiffre}}</button> <!--click.stop permet d'arreter la porpagation du click-->
-                    <button @click.stop="ecrireValeur(null)">X</button>
-                </div>
-            </div> <!--là ici on crée les carrés avec les bords-->
-            <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-3 min-w-3"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
-                <div v-if="trouverSigne(endroit)" :style="{ transform: endroit.forme === 'vertical' ? 'rotate(90deg)' : 'rotate(0deg)'}" :class="colorierSigne(endroit)">  {{ trouverSigne(endroit) }}
-                </div>
-            </div> 
-            <div v-else-if ="endroit.forme === 'espace'"
-            ></div>
-        </template> <!--si on note template/ c'est une balise qui s'autoferme-->
+    <div>
+        <div :style="{ display:'grid', gridTemplateColumns: pistes, gridTemplateRows: pistes}"> <!--déclare les pistes une par un !! '=' veut dire la valeur dont est contenu qlch, ':' signifie que suite est du js -->
+            <template v-for="(endroit, k) in endroits" :key="k"> <!--répéte contenu sans reproduire d'élé HTML !!!! K est index de endroits-->
+                <div v-if="endroit.forme === 'carre'" :style="{border: '2px solid #334155', position: 'relative'}" @click="rendreActif(endroit.index)" :class="{'bg-pink-300': endroit.index === caseActive }"> <!--les : devant class va d'épendre d'une condition pour s'afficher-->
+                    <div v-if="grilleDeJeu[endroit.index]?.valeur !== null" :class="mettreCouleur(endroit.index)" class="text-2xl">{{ grilleDeJeu[endroit.index]?.valeur }}</div>
+                    <div v-else></div> <!--Case non-verrouille donc libre pour la remplir-->
+                    <div v-if="endroit.index === caseActive" class="text-1xl top-full left-0 z-10 flex gap-0 rounded-1xl bg-pink-600 " style="position: absolute">
+                        <button v-for="chiffre in ListeTailGril" :key="chiffre"  @click.stop="ecrireValeur(chiffre)">{{chiffre}}</button> <!--click.stop permet d'arreter la porpagation du click-->
+                        <button  @click.stop="ecrireValeur(null)">X</button>
+                    </div>
+                </div> <!--là ici on crée les carrés avec les bords-->
+                <div v-else-if="endroit.forme === 'horizontal' || endroit.forme === 'vertical'" class="min-h-3 min-w-3"> <!--l'emplacement vide permet de décaler grille ça veut dire d'avoir que un carrée sur deux, donc inéquation ici-->
+                    <div v-if="trouverSigne(endroit)" :style="{ transform: endroit.forme === 'vertical' ? 'rotate(90deg)' : 'rotate(0deg)'}" :class="colorierSigne(endroit)" class="text-3xl ">  {{ trouverSigne(endroit) }}
+                    </div>
+                </div> 
+                <div v-else-if ="endroit.forme === 'espace'"></div>
+            </template> <!--si on note template/ c'est une balise qui s'autoferme-->
+        </div>
+        <!--On crée un nouveau parent pas de la grille pour créer un bouton en dessus de celle-ci-->
+        <button @click="nouveauJeu" class="bg-red-700 text-white px-4 py-2 rounded-2xl hover:bg-red-900 mt-5">Nouvelle partie !</button>
     </div>
 </template>
 
