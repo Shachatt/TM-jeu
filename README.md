@@ -1,17 +1,20 @@
-Comment jouer au Futoshiki ?
+# Vue 3 + TypeScript + Vite + TailwindCSS 4
+## Comment jouer au Futoshiki ?
 
-D'abord il faut savoir que ça a été codé avec Vue en utilisant Vite-Javascript-TailwindCSS,
-A savoir que npm est utilisé pour lancer le code.
+D'abord il faut savoir que ça a été codé avec Vue 3 en utilisant **Vite-Javascript-TailwindCSS**,
 
-Pour pouvoir jouer au jeu il faut prendre le dossier TMjeu sur VScode.
-Ensuite aller dans le fichier Futoshiki.vue
+*Attention TailwindCSS est en version 4*
 
-Dans le terminal vérifier d'être dans le dossier 'TMjeu'
-toujours dans le terminal écrivez :
+Pour lancer le code il faut télécharger **Node.js** pour utiliser *npm*
+
+### Pour pouvoir jouer au jeu il faut :
+1. le dossier TMjeu sur VScode.
+2. aller dans le fichier Futoshiki.vue
+3. dans le terminal vérifier d'être dans le dossier 'TMjeu' ou faire la commande ```cd TM jeu```
+4. toujours dans le terminal écrivez :
 ```npm install``` 
-Dès que c'est installé écrivez :
+5. Dès que c'est installé écrivez :
 ```npm run dev```
+6. Ensuite cliquer sur le lien qui s'affichera
 
-Ensuite cliquer sur le lien,
-
-Et voilà vous pouvez jouer !
+Et voilà **vous pouvez jouer !** 
